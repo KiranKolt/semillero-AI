@@ -8,6 +8,7 @@ import ProjectStand from './ProjectStand';
 import { fetchProjects } from '../services/api';
 import { Project } from '../types/project';
 import WebNavbar from './WebNavbar';
+import ThumbstickMovement from './ThumbstickMovement';
 
 
 
@@ -32,9 +33,11 @@ export default function VRScene() {
   };
 
   return (
-    <a-scene physics="gravity: -9.8; debug: false">
-      {/* Assets section - Aquí cargas tus modelos 3D (.glb o .gltf) */}
-      <a-assets>
+    <>
+      <ThumbstickMovement />
+      <a-scene physics="gravity: -9.8; debug: false">
+        {/* Assets section - Aquí cargas tus modelos 3D (.glb o .gltf) */}
+        <a-assets>
         {/* 
           Para cargar modelos 3D externos, descomenta esto y coloca tu archivo .glb en public/assets/modelos/
           Ejemplo:
@@ -67,7 +70,7 @@ export default function VRScene() {
       {/* Cámara con controles de movimiento continuo optimizado para Quest */}
       <a-entity 
         id="rig" 
-        movement-controls="controls: gamepad, keyboard; speed: 0.15; fly: false; constrainToNavMesh: false"
+        thumbstick-movement="speed: 0.15; rotationSpeed: 1.5"
         position="0 0 0"
       >
         <a-entity 
@@ -177,7 +180,6 @@ export default function VRScene() {
         color="#2c3e50"
         metalness="0.3"
         roughness="0.7"
-        static-body
       ></a-plane>
       
       {/* Grid visual mejorado para mejor percepción en VR */}
@@ -326,7 +328,8 @@ export default function VRScene() {
       <a-light type="directional" position="2 4 1" intensity="0.6" color="#ffffff"></a-light>
       <a-light type="point" position="0 5 0" intensity="0.4" color="#6495ED"></a-light>
       <a-light type="hemisphere" color="#87CEEB" groundColor="#2F4F4F" intensity="0.5"></a-light>
-    </a-scene>
+      </a-scene>
+    </>
   );
 }
 
