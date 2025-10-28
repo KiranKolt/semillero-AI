@@ -2,9 +2,6 @@ import { Project } from '../types/project';
 
 // Service para manejar datos del backend
 // Conectar a Supabase o Firebase cuando esté listo
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
-
 /**
  * Fetch de proyectos desde el backend
  * Por ahora retorna datos mock, reemplazar con llamada real

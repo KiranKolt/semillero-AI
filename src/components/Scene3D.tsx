@@ -1,5 +1,5 @@
 import 'aframe';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import ProjectStand from './ProjectStand';
 import { fetchProjects } from '../services/api';
 import { Project } from '../types/project';

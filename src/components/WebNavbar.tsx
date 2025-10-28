@@ -1,5 +1,4 @@
-import React from 'react';
-
+import 'aframe';
 /**
  * Navbar/Header 3D para la experiencia web inmersiva
  * Flota en el aire como un menú de navegación web

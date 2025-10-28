@@ -3,19 +3,21 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://tuusuario.github.io/mi-web",
+  "homepage": "https://kirankolt.github.io/semillero-AI",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "aframe": "^1.7.1",
+    "aframe-extras": "^7.6.0",
+    "aframe-react": "^4.4.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "aframe": "^1.5.0"
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
@@ -27,10 +29,10 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
+    "gh-pages": "^6.3.0",
     "postcss": "^8.4.40",
     "tailwindcss": "^3.4.8",
     "typescript": "^5.5.4",
     "vite": "^5.3.4"
   }
 }
-
