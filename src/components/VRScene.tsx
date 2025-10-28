@@ -64,17 +64,16 @@ export default function VRScene() {
       {/* Web Navbar flotante */}
       <WebNavbar />
       
-      {/* Cámara con controles de movimiento continuo */}
+      {/* Cámara con controles de movimiento continuo optimizado para Quest */}
       <a-entity 
         id="rig" 
-        movement-controls="fly: false; speed: 0.15"
+        movement-controls="controls: gamepad, keyboard; speed: 0.15; fly: false; constrainToNavMesh: false"
         position="0 0 0"
       >
         <a-entity 
           id="camera"
           camera 
-          look-controls="pointerLockEnabled: true"
-          wasd-controls="acceleration: 20"
+          look-controls="pointerLockEnabled: false; reverseMouseDrag: false; touchEnabled: true"
           position="0 1.6 0"
         >
           <a-entity
@@ -89,25 +88,34 @@ export default function VRScene() {
           </a-entity>
         </a-entity>
         
-        {/* Controladores VR con super-hands */}
+        {/* Controlador Izquierdo - Movimiento + Interacciones */}
         <a-entity 
+          id="leftHand"
           hand-controls="hand: left; handModelStyle: lowPoly; color: #15AABF"
-          laser-controls
-          raycaster="objects: .clickable, .grabbable; far: 3"
+          laser-controls="hand: left"
+          raycaster="objects: .clickable, .grabbable; far: 3; showLine: true"
           super-hands="colliderEvent: raycaster-intersection;
                        colliderEventProperty: els;
                        colliderEndEvent: raycaster-intersection-cleared;
                        colliderEndEventProperty: clearedEls"
+          vive-controls="hand: left"
+          oculus-touch-controls="hand: left"
+          windows-motion-controls="hand: left"
         ></a-entity>
         
+        {/* Controlador Derecho - Interacciones */}
         <a-entity 
+          id="rightHand"
           hand-controls="hand: right; handModelStyle: lowPoly; color: #15AABF"
-          laser-controls
-          raycaster="objects: .clickable, .grabbable; far: 3"
+          laser-controls="hand: right"
+          raycaster="objects: .clickable, .grabbable; far: 3; showLine: true"
           super-hands="colliderEvent: raycaster-intersection;
                        colliderEventProperty: els;
                        colliderEndEvent: raycaster-intersection-cleared;
                        colliderEndEventProperty: clearedEls"
+          vive-controls="hand: right"
+          oculus-touch-controls="hand: right"
+          windows-motion-controls="hand: right"
         ></a-entity>
       </a-entity>
 
