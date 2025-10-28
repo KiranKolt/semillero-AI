@@ -14,41 +14,77 @@ export default function ThumbstickMovement() {
         init: function () {
           this.velocity = new (window as any).THREE.Vector3();
           this.rotation = 0;
+          this.keys = {};
+          
+          // Keyboard controls (WASD)
+          window.addEventListener('keydown', (e) => {
+            this.keys[e.key.toLowerCase()] = true;
+          });
+          window.addEventListener('keyup', (e) => {
+            this.keys[e.key.toLowerCase()] = false;
+          });
         },
 
         tick: function () {
           const el = this.el;
           const data = this.data;
+          const debugText = document.querySelector('#debugText');
           
           // Buscar gamepads
           const gamepads = navigator.getGamepads();
           let gamepad = null;
+          let gamepadDetected = false;
           
           for (let i = 0; i < gamepads.length; i++) {
-            if (gamepads[i] && gamepads[i]?.id.includes('Oculus')) {
+            if (gamepads[i]) {
               gamepad = gamepads[i];
+              gamepadDetected = true;
+              if (debugText && gamepad) {
+                (debugText as any).setAttribute('value', `Gamepad: ${gamepad.id.substring(0, 30)}`);
+              }
               break;
             }
           }
 
-          if (!gamepad || !gamepad.axes) return;
+          if (!gamepadDetected && debugText) {
+            (debugText as any).setAttribute('value', 'No gamepad - Use WASD');
+          }
 
           // Obtener posición actual
           const position = el.getAttribute('position');
           const rotation = el.getAttribute('rotation');
 
-          // Thumbstick izquierdo (axes 2 y 3) - Movimiento
-          const axisX = gamepad.axes[2] || 0; // Izquierda/Derecha
-          const axisY = gamepad.axes[3] || 0; // Adelante/Atrás
+          let moveX = 0;
+          let moveZ = 0;
+          let rotate = 0;
 
-          // Thumbstick derecho (axes 0 y 1) - Rotación
-          const rotAxisX = gamepad.axes[0] || 0;
+          // Leer gamepad si está disponible
+          if (gamepad && gamepad.axes && gamepad.axes.length >= 4) {
+            // Thumbstick izquierdo (axes 2 y 3) - Movimiento
+            const axisX = gamepad.axes[2] || 0; // Izquierda/Derecha
+            const axisY = gamepad.axes[3] || 0; // Adelante/Atrás
 
-          // Aplicar deadzone
-          const deadzone = 0.2;
-          const moveX = Math.abs(axisX) > deadzone ? axisX : 0;
-          const moveZ = Math.abs(axisY) > deadzone ? axisY : 0;
-          const rotate = Math.abs(rotAxisX) > deadzone ? rotAxisX : 0;
+            // Thumbstick derecho (axes 0 y 1) - Rotación  
+            const rotAxisX = gamepad.axes[0] || 0;
+
+            // Aplicar deadzone
+            const deadzone = 0.15;
+            moveX = Math.abs(axisX) > deadzone ? axisX : 0;
+            moveZ = Math.abs(axisY) > deadzone ? axisY : 0;
+            rotate = Math.abs(rotAxisX) > deadzone ? rotAxisX : 0;
+            
+            if (debugText && (moveX !== 0 || moveZ !== 0 || rotate !== 0)) {
+              (debugText as any).setAttribute('value', `Moving! X:${moveX.toFixed(2)} Z:${moveZ.toFixed(2)}`);
+            }
+          } else {
+            // Fallback a WASD
+            if (this.keys['w']) moveZ = -1;
+            if (this.keys['s']) moveZ = 1;
+            if (this.keys['a']) moveX = -1;
+            if (this.keys['d']) moveX = 1;
+            if (this.keys['q']) rotate = 1;
+            if (this.keys['e']) rotate = -1;
+          }
 
           if (moveX !== 0 || moveZ !== 0 || rotate !== 0) {
             const speed = data.speed;

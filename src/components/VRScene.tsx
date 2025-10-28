@@ -91,35 +91,36 @@ export default function VRScene() {
           </a-entity>
         </a-entity>
         
-        {/* Controlador Izquierdo - Movimiento + Interacciones */}
+        {/* Controlador Izquierdo - Quest 2 */}
         <a-entity 
           id="leftHand"
-          hand-controls="hand: left; handModelStyle: lowPoly; color: #15AABF"
-          laser-controls="hand: left"
-          raycaster="objects: .clickable, .grabbable; far: 3; showLine: true"
-          super-hands="colliderEvent: raycaster-intersection;
-                       colliderEventProperty: els;
-                       colliderEndEvent: raycaster-intersection-cleared;
-                       colliderEndEventProperty: clearedEls"
-          vive-controls="hand: left"
           oculus-touch-controls="hand: left"
-          windows-motion-controls="hand: left"
-        ></a-entity>
+        >
+          <a-entity
+            line="start: 0 0 0; end: 0 0 -3; color: #15AABF; opacity: 0.8"
+          ></a-entity>
+        </a-entity>
         
-        {/* Controlador Derecho - Interacciones */}
+        {/* Controlador Derecho - Quest 2 */}
         <a-entity 
           id="rightHand"
-          hand-controls="hand: right; handModelStyle: lowPoly; color: #15AABF"
-          laser-controls="hand: right"
-          raycaster="objects: .clickable, .grabbable; far: 3; showLine: true"
-          super-hands="colliderEvent: raycaster-intersection;
-                       colliderEventProperty: els;
-                       colliderEndEvent: raycaster-intersection-cleared;
-                       colliderEndEventProperty: clearedEls"
-          vive-controls="hand: right"
           oculus-touch-controls="hand: right"
-          windows-motion-controls="hand: right"
-        ></a-entity>
+        >
+          <a-entity
+            line="start: 0 0 0; end: 0 0 -3; color: #15AABF; opacity: 0.8"
+          ></a-entity>
+        </a-entity>
+        
+        {/* Panel de Debug en VR */}
+        <a-text
+          id="debugText"
+          value="Esperando gamepads..."
+          position="0 2 -2"
+          align="center"
+          width="3"
+          color="#00FF00"
+          background="color: #000000; opacity: 0.7"
+        ></a-text>
       </a-entity>
 
       {/* Sección Hero - Elementos decorativos estilo página web */}
