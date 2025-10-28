@@ -1,5 +1,7 @@
 import 'aframe';
 import 'aframe-extras';
+import 'aframe-physics-system';
+import 'super-hands';
 import { useEffect, useState } from 'react';
 import ProjectStand from './ProjectStand';
 // import WebNavbar from './WebNavbar';
@@ -30,7 +32,7 @@ export default function VRScene() {
   };
 
   return (
-    <a-scene>
+    <a-scene physics="gravity: -9.8; debug: false">
       {/* Assets section - Aquí cargas tus modelos 3D (.glb o .gltf) */}
       <a-assets>
         {/* 
@@ -76,7 +78,8 @@ export default function VRScene() {
           position="0 1.6 0"
         >
           <a-entity
-            cursor="fuse: true; fuseTimeout: 500"
+            cursor="fuse: true; fuseTimeout: 500; rayOrigin: mouse"
+            raycaster="objects: .clickable, .grabbable"
             position="0 0 -1"
             geometry="primitive: ring; radiusInner: 0.01; radiusOuter: 0.02"
             material="shader: flat; opacity: 0.8; color: #4CC3D9"
@@ -85,6 +88,27 @@ export default function VRScene() {
           >
           </a-entity>
         </a-entity>
+        
+        {/* Controladores VR con super-hands */}
+        <a-entity 
+          hand-controls="hand: left; handModelStyle: lowPoly; color: #15AABF"
+          laser-controls
+          raycaster="objects: .clickable, .grabbable; far: 3"
+          super-hands="colliderEvent: raycaster-intersection;
+                       colliderEventProperty: els;
+                       colliderEndEvent: raycaster-intersection-cleared;
+                       colliderEndEventProperty: clearedEls"
+        ></a-entity>
+        
+        <a-entity 
+          hand-controls="hand: right; handModelStyle: lowPoly; color: #15AABF"
+          laser-controls
+          raycaster="objects: .clickable, .grabbable; far: 3"
+          super-hands="colliderEvent: raycaster-intersection;
+                       colliderEventProperty: els;
+                       colliderEndEvent: raycaster-intersection-cleared;
+                       colliderEndEventProperty: clearedEls"
+        ></a-entity>
       </a-entity>
 
       {/* Sección Hero - Elementos decorativos estilo página web */}
@@ -157,32 +181,121 @@ export default function VRScene() {
         material="src: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8ZGVmcz4KICAgIDxwYXR0ZXJuIGlkPSJncmlkIiB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPgogICAgICA8cGF0aCBkPSJNIDIwIDAgTCAwIDAgMCAyMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjM0E1RkNEIiBzdHJva2Utd2lkdGg9IjEiLz4KICAgIDwvcGF0dGVybj4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9InVybCgjZ3JpZCkiIC8+Cjwvc3ZnPg==); repeat: 100 100; opacity: 0.5; transparent: true"
       ></a-plane>
 
-      {/* Obstáculos de prueba para demostrar movimiento */}
+      {/* OBJETOS AGARRABLES - Puedes tomarlos y lanzarlos */}
       <a-box
-        position="3 0.5 -3"
-        width="1"
-        height="1"
-        depth="1"
+        className="grabbable"
+        position="2 1.5 -3"
+        width="0.3"
+        height="0.3"
+        depth="0.3"
         color="#E74C3C"
+        dynamic-body="mass: 1"
+        grabbable
+        stretchable
+        draggable
+      ></a-box>
+      
+      <a-sphere
+        className="grabbable"
+        position="-2 1.5 -3"
+        radius="0.2"
+        color="#9B59B6"
+        dynamic-body="mass: 0.5"
+        grabbable
+        stretchable
+        draggable
+      ></a-sphere>
+      
+      <a-box
+        className="grabbable"
+        position="0 1.5 -4"
+        width="0.4"
+        height="0.4"
+        depth="0.4"
+        color="#3498DB"
+        dynamic-body="mass: 1.5"
+        grabbable
+        stretchable
+        draggable
+      ></a-box>
+      
+      <a-cylinder
+        className="grabbable"
+        position="1 1.5 -5"
+        radius="0.15"
+        height="0.5"
+        color="#F39C12"
+        dynamic-body="mass: 0.8"
+        grabbable
+        stretchable
+        draggable
+      ></a-cylinder>
+      
+      {/* OBSTÁCULOS ESTÁTICOS - No se pueden mover */}
+      <a-box
+        position="5 0.75 -5"
+        width="1.5"
+        height="1.5"
+        depth="1.5"
+        color="#34495E"
         static-body
       ></a-box>
       
       <a-cylinder
-        position="-3 0.75 -3"
-        radius="0.5"
-        height="1.5"
-        color="#3498DB"
+        position="-5 1 -5"
+        radius="0.7"
+        height="2"
+        color="#2C3E50"
         static-body
       ></a-cylinder>
       
+      {/* MESA INTERACTIVA */}
       <a-box
-        position="0 0.5 -8"
+        position="0 0.7 -6"
         width="2"
-        height="1"
+        height="0.1"
         depth="1"
-        color="#2ECC71"
+        color="#8B4513"
         static-body
       ></a-box>
+      
+      <a-box
+        position="-0.8 0.35 -6"
+        width="0.1"
+        height="0.7"
+        depth="0.1"
+        color="#654321"
+        static-body
+      ></a-box>
+      
+      <a-box
+        position="0.8 0.35 -6"
+        width="0.1"
+        height="0.7"
+        depth="0.1"
+        color="#654321"
+        static-body
+      ></a-box>
+      
+      {/* BOTÓN PRESIONABLE */}
+      <a-cylinder
+        className="clickable"
+        position="0 0.85 -6"
+        radius="0.15"
+        height="0.1"
+        color="#2ECC71"
+        static-body
+        animation__press="property: position; startEvents: click; from: 0 0.85 -6; to: 0 0.8 -6; dur: 100"
+        animation__release="property: position; startEvents: animationcomplete__press; to: 0 0.85 -6; dur: 100"
+      ></a-cylinder>
+      
+      <a-text
+        value="PRESIONA"
+        position="0 0.95 -6"
+        align="center"
+        width="2"
+        color="#FFFFFF"
+      ></a-text>
 
       {/* Proyectos dinámicos generados desde la BD */}
       {!loading && projects.map((project) => (
@@ -199,16 +312,6 @@ export default function VRScene() {
           font="kelsonsans"
         ></a-text>
       )}
-
-      {/* Hand controls para VR (controladores) */}
-      <a-entity 
-        hand-controls="hand: left" 
-        tracked-controls="controller: 0"
-      ></a-entity>
-      <a-entity 
-        hand-controls="hand: right" 
-        tracked-controls="controller: 1"
-      ></a-entity>
 
       {/* Iluminación mejorada para VR */}
       <a-light type="ambient" color="#ddd" intensity="0.8"></a-light>
