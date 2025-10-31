@@ -153,6 +153,15 @@ export default function Scene3D() {
           <a-entity cursor="rayOrigin: mouse"></a-entity>
           {/* Overlay de fundido */}
           <a-plane id="fade" position="0 0 -0.3" width="2" height="2" material="color: black; transparent: true; opacity: 0"></a-plane>
+          {/* Portal pequeño para volver al hub cuando no estamos en intro */}
+          {experience !== 'intro' && (
+            <a-entity position="0 -0.2 -1.2" class="clickable" onClick={() => teleportTo('0 0 0', 'intro')}>
+              <a-entity face-camera>
+                <a-entity geometry="primitive: circle; radius: 0.18" material="color: #22d3ee; opacity: 0.25; transparent: true; side: double; depthTest: false"></a-entity>
+                <a-entity geometry="primitive: ring; radiusInner: 0.18; radiusOuter: 0.26" material="shader: flat; color: #22d3ee; emissive: #22d3ee; emissiveIntensity: 0.9; transparent: true; opacity: 0.85; side: double; blending: additive; depthTest: false"></a-entity>
+              </a-entity>
+            </a-entity>
+          )}
         </a-entity>
       </a-entity>
       {/* Portales de experiencias en la intro */}
@@ -185,7 +194,7 @@ export default function Scene3D() {
       {experience === 'intro' && (
         <a-entity position="0 1.3 -2.2">
           {/* Portal Nebula */}
-          <a-entity position="-0.9 0 0" class="clickable" onClick={() => teleportTo('-6 0 -12', 'nebula')}>
+          <a-entity position="-1.4 0 0" class="clickable" onClick={() => teleportTo('-6 0 -12', 'nebula')}>
             <a-entity face-camera>
               {/* núcleo */}
               <a-entity geometry="primitive: circle; radius: 0.28" material="color: #0ea5e9; opacity: 0.2; transparent: true; side: double; depthTest: false"></a-entity>
@@ -220,7 +229,7 @@ export default function Scene3D() {
             <a-light type="point" color="#a78bfa" intensity="0.6" distance="3"></a-light>
           </a-entity>
           {/* Portal Plaza */}
-          <a-entity position="0.9 0 0" class="clickable" onClick={() => teleportTo('6 0 -12', 'plaza')}>
+          <a-entity position="1.4 0 0" class="clickable" onClick={() => teleportTo('6 0 -12', 'plaza')}>
             <a-entity face-camera>
               <a-entity geometry="primitive: circle; radius: 0.28" material="color: #10b981; opacity: 0.12; transparent: true"></a-entity>
               <a-entity geometry="primitive: ring; radiusInner: 0.28; radiusOuter: 0.42" material="shader: flat; color: #34d399; emissive: #34d399; emissiveIntensity: 0.9; transparent: true; opacity: 0.85; side: double; blending: additive; depthTest: false"></a-entity>
