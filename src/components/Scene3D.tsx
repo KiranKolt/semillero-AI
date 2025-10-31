@@ -13,6 +13,7 @@ export default function Scene3D() {
   const ambientRef = useRef<any>(null);
   const [muted, setMuted] = useState(false);
   const audioSrc = `${import.meta.env.BASE_URL}audio/ambient.mp3`;
+  const htmlAudioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     loadProjects();
@@ -34,15 +35,10 @@ export default function Scene3D() {
   useEffect(() => {
     const tryPlay = () => {
       try {
-        const sceneEl: any = document.querySelector('a-scene');
-        if (sceneEl?.audioListener?.context?.state === 'suspended') {
-          sceneEl.audioListener.context.resume();
-        }
-        const el: any = ambientRef.current || document.querySelector('[sound]');
-        const sound = el?.components?.sound;
-        if (sound) {
-          sound.stopSound?.();
-          sound.playSound();
+        const el = htmlAudioRef.current;
+        if (el) {
+          el.volume = muted ? 0 : 0.5;
+          el.play().catch(() => {/* ignore */});
         }
       } catch {}
       window.removeEventListener('pointerdown', tryPlay);
@@ -72,11 +68,12 @@ export default function Scene3D() {
 
   // Aplica el volumen cuando cambia muted
   useEffect(() => {
-    const el: any = ambientRef.current || document.querySelector('[sound]');
-    const vol = muted ? 0 : 0.25;
-    try {
-      if (el) el.setAttribute('sound', 'volume', vol);
-    } catch {}
+    const el = htmlAudioRef.current;
+    const vol = muted ? 0 : 0.5;
+    if (el) {
+      el.muted = muted;
+      el.volume = vol;
+    }
   }, [muted]);
 
   return (
@@ -85,19 +82,11 @@ export default function Scene3D() {
       style={{ height: '100vh', width: '100vw', position: 'fixed', top: 0, left: 0 }}
       vr-mode-ui="enabled: true"
     >
-      {/* Assets (preload de audio para evitar CORS/autoplay issues) */}
-      <a-assets>
-        {/* Coloca tu archivo en public/ambient.mp3 para despliegues con base path */}
-        <audio id="ambient-audio" src={audioSrc}></audio>
-      </a-assets>
+      {/* Audio HTML como fondo (más fiable para autoplay tras interacción) */}
+      <audio ref={htmlAudioRef} id="ambient-audio" src={audioSrc} loop style={{ display: 'none' }}></audio>
       {/* Fondo espacial con estrellas */}
       <a-sky color="#0a0a1a"></a-sky>
       
-      {/* Sonido ambiental suave (loop). Se inicia con la primera interacción */}
-      <a-entity
-        ref={(el: HTMLElement | null) => (ambientRef.current = el)}
-        sound="src: #ambient-audio; autoplay: false; loop: true; volume: 0.25; positional: false"
-      ></a-entity>
       
       {/* Generar estrellas de fondo con parpadeo sutil */}
       {Array.from({ length: 120 }, (_, i) => {
