@@ -65,7 +65,7 @@ export default function Scene3D() {
     >
       {/* Assets (preload de audio para evitar CORS/autoplay issues) */}
       <a-assets>
-        <audio id="ambient-audio" src="https://assets.mixkit.co/music/preview/mixkit-space-ambient-116.mp3" crossorigin="anonymous"></audio>
+        <audio id="ambient-audio" src="https://assets.mixkit.co/music/preview/mixkit-space-ambient-116.mp3" crossOrigin="anonymous"></audio>
       </a-assets>
       {/* Fondo espacial con estrellas */}
       <a-sky color="#0a0a1a"></a-sky>
