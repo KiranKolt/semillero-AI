@@ -12,6 +12,7 @@ export default function Scene3D() {
   const audioSrc = `${import.meta.env.BASE_URL}audio/ambient.mp3`;
   const htmlAudioRef = useRef<HTMLAudioElement | null>(null);
   const [experience, setExperience] = useState<Experience>('intro');
+  const [nebulaCompressed, setNebulaCompressed] = useState(false);
 
   // Componente simple para que un elemento siempre mire a la cámara
   useEffect(() => {
@@ -119,6 +120,16 @@ export default function Scene3D() {
     return () => window.removeEventListener('keydown', onNum);
   }, [experience]);
 
+  // Ride automático en Tunnel
+  useEffect(() => {
+    if (experience !== 'tunnel') return;
+    const rig: any = document.getElementById('rig');
+    if (!rig) return;
+    try {
+      rig.setAttribute('animation__ride', 'property: position; to: 0 0 -18; dur: 6000; easing: linear; loop: false');
+    } catch {}
+  }, [experience]);
+
   // Listeners de click para portales (React no propaga onClick en custom elements)
   useEffect(() => {
     const nebula = document.getElementById('portal-nebula');
@@ -133,11 +144,26 @@ export default function Scene3D() {
     tunnel?.addEventListener('click', goTunnel);
     plaza?.addEventListener('click', goPlaza);
     home?.addEventListener('click', goHome);
+    // extras por experiencia
+    const nebulaToggle = document.getElementById('nebula-toggle');
+    const toggleNebula = () => setNebulaCompressed((v) => !v);
+    nebulaToggle?.addEventListener('click', toggleNebula);
+    // plaza balls
+    const plazaBalls = Array.from(document.querySelectorAll('.plaza-ball')) as HTMLElement[];
+    const onBall = (el: HTMLElement) => () => {
+      try {
+        el.setAttribute('animation__jump', 'property: position; dir: alternate; loop: 2; dur: 400; to: ' + el.getAttribute('position')?.replace(/ ([^ ]+) /, (m)=>m) + '');
+        el.setAttribute('material', 'color', '#ffffff');
+      } catch {}
+    };
+    plazaBalls.forEach((el) => el.addEventListener('click', onBall(el)));
     return () => {
       nebula?.removeEventListener('click', goNebula);
       tunnel?.removeEventListener('click', goTunnel);
       plaza?.removeEventListener('click', goPlaza);
       home?.removeEventListener('click', goHome);
+      nebulaToggle?.removeEventListener('click', toggleNebula);
+      plazaBalls.forEach((el) => el.removeEventListener('click', onBall(el)));
     };
   }, [experience]);
 
@@ -365,10 +391,20 @@ export default function Scene3D() {
       {/* Suelos/escenas por experiencia */}
       {experience === 'nebula' && (
         <a-entity>
-          {Array.from({ length: 40 }, (_, i) => (
-            <a-sphere key={i} position={`${(Math.random()-0.5)*6} ${1+Math.random()*3} ${-12 + (Math.random()-0.5)*4}`} radius={`${0.1 + Math.random()*0.4}`} color="#7dd3fc" material="emissive: #7dd3fc; emissiveIntensity: 0.5; metalness: 0.1; roughness: 0.6" opacity="0.8"></a-sphere>
-          ))}
-          <a-light type="point" position="0 2 -12" color="#93c5fd" intensity="0.8"></a-light>
+          {/* Toggle de compresión/expansión */}
+          <a-entity id="nebula-toggle" class="clickable" geometry="primitive: circle; radius: 0.3" material="color: #0ea5e9; opacity: 0; transparent: true" position="-6 1.6 -12"></a-entity>
+          {Array.from({ length: 60 }, (_, i) => {
+            const angle = (i / 60) * Math.PI * 2;
+            const baseR = nebulaCompressed ? 0.8 : 3.2;
+            const x = -6 + Math.cos(angle) * (baseR * (0.5 + Math.random()*0.5));
+            const y = 1 + Math.random()*2.5;
+            const z = -12 + Math.sin(angle) * (baseR * (0.5 + Math.random()*0.5));
+            const r = 0.06 + Math.random()*0.25;
+            return (
+              <a-sphere key={`nb${i}`} position={`${x} ${y} ${z}`} radius={`${r}`} color="#7dd3fc" material="emissive: #7dd3fc; emissiveIntensity: 0.6; metalness: 0.1; roughness: 0.6" opacity="0.85"></a-sphere>
+            );
+          })}
+          <a-light type="point" position="-6 2 -12" color="#93c5fd" intensity="0.9"></a-light>
         </a-entity>
       )}
 
@@ -384,7 +420,7 @@ export default function Scene3D() {
         <a-entity>
           <a-plane position="6 -1 -12" width="8" height="8" color="#0b1220" rotation="-90 0 0" opacity="0.6"></a-plane>
           {Array.from({ length: 9 }, (_, i) => (
-            <a-sphere key={i} position={`${6 + (i%3 -1)*1.6} ${0.5 + Math.random()*1.2} ${-12 + (Math.floor(i/3)-1)*1.6}`} radius="0.35" color="#34d399" animation__b="property: position; dir: alternate; loop: true; dur: ${1200 + i*150}; to: ${6 + (i%3 -1)*1.6} ${1.6 + Math.random()*0.5} ${-12 + (Math.floor(i/3)-1)*1.6}"></a-sphere>
+            <a-sphere key={`pz${i}`} class="plaza-ball clickable" position={`${6 + (i%3 -1)*1.6} ${0.5 + Math.random()*1.2} ${-12 + (Math.floor(i/3)-1)*1.6}`} radius="0.35" color="#34d399" animation__b={`property: position; dir: alternate; loop: true; dur: ${1200 + i*150}; to: ${6 + (i%3 -1)*1.6} ${1.6 + Math.random()*0.5} ${-12 + (Math.floor(i/3)-1)*1.6}`}></a-sphere>
           ))}
         </a-entity>
       )}
