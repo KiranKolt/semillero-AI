@@ -1,5 +1,5 @@
 import 'aframe';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ProjectStand from './ProjectStand';
 import { fetchProjects } from '../services/api';
 import { Project } from '../types/project';
@@ -10,6 +10,7 @@ import { Project } from '../types/project';
 export default function Scene3D() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const ambientRef = useRef<any>(null);
 
   useEffect(() => {
     loadProjects();
@@ -27,6 +28,35 @@ export default function Scene3D() {
     }
   };
 
+  // Habilita el audio tras la primera interacción del usuario
+  useEffect(() => {
+    const tryPlay = () => {
+      try {
+        const sceneEl: any = document.querySelector('a-scene');
+        if (sceneEl?.audioListener?.context?.state === 'suspended') {
+          sceneEl.audioListener.context.resume();
+        }
+        const el: any = ambientRef.current;
+        const sound = el?.components?.sound;
+        if (sound) {
+          sound.stopSound?.();
+          sound.playSound();
+        }
+      } catch {}
+      window.removeEventListener('pointerdown', tryPlay);
+      window.removeEventListener('keydown', tryPlay);
+      window.removeEventListener('touchstart', tryPlay);
+    };
+    window.addEventListener('pointerdown', tryPlay, { once: true });
+    window.addEventListener('keydown', tryPlay, { once: true });
+    window.addEventListener('touchstart', tryPlay, { once: true });
+    return () => {
+      window.removeEventListener('pointerdown', tryPlay);
+      window.removeEventListener('keydown', tryPlay);
+      window.removeEventListener('touchstart', tryPlay);
+    };
+  }, []);
+
   return (
     <a-scene 
       embedded 
@@ -36,9 +66,10 @@ export default function Scene3D() {
       {/* Fondo espacial con estrellas */}
       <a-sky color="#0a0a1a"></a-sky>
       
-      {/* Sonido ambiental suave (loop) */}
-      <a-entity 
-        sound="src: url(https://assets.mixkit.co/music/preview/mixkit-space-ambient-116.mp3); autoplay: true; loop: true; volume: 0.25; positional: false"
+      {/* Sonido ambiental suave (loop). Se inicia con la primera interacción */}
+      <a-entity
+        ref={(el) => (ambientRef.current = el)}
+        sound="src: url(https://assets.mixkit.co/music/preview/mixkit-space-ambient-116.mp3); autoplay: false; loop: true; volume: 0.25; positional: false"
       ></a-entity>
       
       {/* Generar estrellas de fondo con parpadeo sutil */}
