@@ -36,16 +36,31 @@ export default function Scene3D() {
       {/* Fondo espacial con estrellas */}
       <a-sky color="#0a0a1a"></a-sky>
       
-      {/* Generar estrellas de fondo */}
-      {Array.from({ length: 50 }, (_, i) => (
-        <a-sphere
-          key={i}
-          position={`${(Math.random() - 0.5) * 40} ${(Math.random() - 0.5) * 30} -20`}
-          radius={0.05 + Math.random() * 0.1}
-          color="#ffffff"
-          opacity="0.8"
-        ></a-sphere>
-      ))}
+      {/* Sonido ambiental suave (loop) */}
+      <a-entity 
+        sound="src: url(https://assets.mixkit.co/music/preview/mixkit-space-ambient-116.mp3); autoplay: true; loop: true; volume: 0.25; positional: false"
+      ></a-entity>
+      
+      {/* Generar estrellas de fondo con parpadeo sutil */}
+      {Array.from({ length: 120 }, (_, i) => {
+        const x = (Math.random() - 0.5) * 40
+        const y = (Math.random() - 0.5) * 30
+        const r = 0.03 + Math.random() * 0.12
+        const dur = 1200 + Math.random() * 2000
+        const delay = Math.random() * 2000
+        return (
+          <a-sphere
+            key={i}
+            position={`${x} ${y} -20`}
+            radius={r}
+            color="#ffffff"
+            opacity="0.8"
+            animation={`property: material.opacity; to: 0.2; dir: alternate; loop: true; dur: ${Math.floor(
+              dur
+            )}; delay: ${Math.floor(delay)}`}
+          ></a-sphere>
+        )
+      })}
 
       {/* Cámara con controles VR */}
       <a-entity 
@@ -74,6 +89,25 @@ export default function Scene3D() {
 
       {/* Elementos decorativos inmersivos con animaciones suaves */}
       <a-entity>
+        {/* Portal de anillos giratorios */}
+        <a-torus 
+          position="0 1.8 -18" 
+          radius="7" 
+          radius-tubular="0.25" 
+          color="#38bdf8" 
+          opacity="0.12"
+          material="metalness: 0.8; roughness: 0.2"
+          animation="property: rotation; to: 0 360 0; dur: 40000; loop: true"
+        ></a-torus>
+        <a-torus 
+          position="0 1.8 -18" 
+          radius="5.4" 
+          radius-tubular="0.15" 
+          color="#a78bfa" 
+          opacity="0.18"
+          animation="property: rotation; to: 360 0 0; dur: 30000; loop: true"
+        ></a-torus>
+
         {/* Esfera azul grande rotando lentamente */}
         <a-sphere 
           position="-12 8 -30" 
@@ -122,6 +156,18 @@ export default function Scene3D() {
           color="#F39C12" 
           opacity="0.15"
           animation="property: rotation; to: 45 -45 45; dur: 22000; loop: true"
+        ></a-sphere>
+      </a-entity>
+      
+      {/* "Shooting star" que cruza el cielo */}
+      <a-entity>
+        <a-sphere 
+          radius="0.06" 
+          color="#ffffff" 
+          position="-15 9 -22"
+          material="emissive: #ffffff; emissiveIntensity: 0.8"
+          animation__move="property: position; to: 15 5 -22; dur: 6000; loop: true; easing: linear"
+          animation__fade="property: material.opacity; from: 0.3; to: 1; dur: 300; dir: alternate; loop: true"
         ></a-sphere>
       </a-entity>
       

@@ -10,7 +10,7 @@ function App() {
   return (
     <div className="relative min-h-screen">
       {/* Fondo 3D que ocupa toda la página */}
-      <div className="fixed inset-0 z-0" style={{ height: '100vh', width: '100vw' }}>
+      <div id="scene3d" className="fixed inset-0 z-0" style={{ height: '100vh', width: '100vw' }}>
         <Scene3D />
       </div>
 
