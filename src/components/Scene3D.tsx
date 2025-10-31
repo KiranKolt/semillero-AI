@@ -106,6 +106,18 @@ export default function Scene3D() {
       }, 250);
     } catch {}
   };
+  
+  // Atajos de teclado para entrar a portales rápidamente
+  useEffect(() => {
+    const onNum = (e: KeyboardEvent) => {
+      if (experience !== 'intro') return;
+      if (e.key === '1') teleportTo('-6 0 -12', 'nebula');
+      if (e.key === '2') teleportTo('0 0 -14', 'tunnel');
+      if (e.key === '3') teleportTo('6 0 -12', 'plaza');
+    };
+    window.addEventListener('keydown', onNum);
+    return () => window.removeEventListener('keydown', onNum);
+  }, [experience]);
   // Sin tarjetas ni textos en VR
 
   return (
@@ -149,8 +161,8 @@ export default function Scene3D() {
           wasd-controls="enabled: true"
           position="0 1.8 0"
         >
-          {/* Cursor por mouse sin retícula visual para evitar el círculo azul */}
-          <a-entity cursor="rayOrigin: mouse"></a-entity>
+          {/* Cursor por mouse limitado a objetos .clickable */}
+          <a-entity cursor="rayOrigin: mouse" raycaster="objects: .clickable"></a-entity>
           {/* Overlay de fundido */}
           <a-plane id="fade" position="0 0 -0.3" width="2" height="2" material="color: black; transparent: true; opacity: 0"></a-plane>
           {/* Portal pequeño para volver al hub cuando no estamos en intro */}
@@ -195,6 +207,7 @@ export default function Scene3D() {
         <a-entity position="0 1.3 -2.2">
           {/* Portal Nebula */}
           <a-entity position="-1.4 0 0" class="clickable" onClick={() => teleportTo('-6 0 -12', 'nebula')}>
+            <a-entity geometry="primitive: circle; radius: 0.62" material="color: #fff; opacity: 0; transparent: true"></a-entity>
             <a-entity face-camera>
               {/* núcleo */}
               <a-entity geometry="primitive: circle; radius: 0.28" material="color: #0ea5e9; opacity: 0.2; transparent: true; side: double; depthTest: false"></a-entity>
@@ -215,6 +228,7 @@ export default function Scene3D() {
           </a-entity>
           {/* Portal Tunnel */}
           <a-entity position="0 0 0" class="clickable" onClick={() => teleportTo('0 0 -14', 'tunnel')}>
+            <a-entity geometry="primitive: circle; radius: 0.62" material="color: #fff; opacity: 0; transparent: true"></a-entity>
             <a-entity face-camera>
               <a-entity geometry="primitive: circle; radius: 0.28" material="color: #8b5cf6; opacity: 0.12; transparent: true"></a-entity>
               <a-entity geometry="primitive: ring; radiusInner: 0.28; radiusOuter: 0.42" material="shader: flat; color: #a78bfa; emissive: #a78bfa; emissiveIntensity: 0.9; transparent: true; opacity: 0.85; side: double; blending: additive; depthTest: false"></a-entity>
@@ -230,6 +244,7 @@ export default function Scene3D() {
           </a-entity>
           {/* Portal Plaza */}
           <a-entity position="1.4 0 0" class="clickable" onClick={() => teleportTo('6 0 -12', 'plaza')}>
+            <a-entity geometry="primitive: circle; radius: 0.62" material="color: #fff; opacity: 0; transparent: true"></a-entity>
             <a-entity face-camera>
               <a-entity geometry="primitive: circle; radius: 0.28" material="color: #10b981; opacity: 0.12; transparent: true"></a-entity>
               <a-entity geometry="primitive: ring; radiusInner: 0.28; radiusOuter: 0.42" material="shader: flat; color: #34d399; emissive: #34d399; emissiveIntensity: 0.9; transparent: true; opacity: 0.85; side: double; blending: additive; depthTest: false"></a-entity>
@@ -246,15 +261,9 @@ export default function Scene3D() {
         </a-entity>
       )}
       
-      {/* Controles de VR para Oculus Quest */}
-      <a-entity 
-        hand-controls="hand: left" 
-        tracked-controls="controller: 0"
-      ></a-entity>
-      <a-entity 
-        hand-controls="hand: right" 
-        tracked-controls="controller: 1"
-      ></a-entity>
+      {/* Controles con rayos para apuntar y hacer click en .clickable */}
+      <a-entity laser-controls="hand: left" raycaster="objects: .clickable"></a-entity>
+      <a-entity laser-controls="hand: right" raycaster="objects: .clickable"></a-entity>
 
       {/* Elementos decorativos inmersivos con animaciones suaves */}
       <a-entity>
