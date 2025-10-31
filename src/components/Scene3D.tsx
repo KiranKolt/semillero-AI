@@ -1,35 +1,16 @@
 import 'aframe';
 import { useEffect, useRef, useState } from 'react';
-import ProjectStand from './ProjectStand';
-import { fetchProjects } from '../services/api';
-import { Project } from '../types/project';
+// Escena sin tarjetas de texto: solo elementos 3D interactivos
 
 /**
  * Escena 3D inmersiva - Versión funcional y simple
  */
 export default function Scene3D() {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
   const [muted, setMuted] = useState(false);
   const audioSrc = `${import.meta.env.BASE_URL}audio/ambient.mp3`;
   const htmlAudioRef = useRef<HTMLAudioElement | null>(null);
-  const [showProjects, setShowProjects] = useState(true);
 
-  useEffect(() => {
-    loadProjects();
-  }, []);
-
-  const loadProjects = async () => {
-    try {
-      setLoading(true);
-      const data = await fetchProjects();
-      setProjects(data);
-    } catch (error) {
-      console.error('Error loading projects:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // (Se removió la carga de proyectos para evitar textos en VR)
 
   // Habilita el audio tras la primera interacción del usuario
   useEffect(() => {
@@ -76,18 +57,7 @@ export default function Scene3D() {
     }
   }, [muted]);
 
-  // Al entrar a VR ocultamos proyectos; al salir los mostramos de nuevo
-  useEffect(() => {
-    const scene = document.querySelector('a-scene');
-    const onEnter = () => setShowProjects(false);
-    const onExit = () => setShowProjects(true);
-    scene?.addEventListener('enter-vr', onEnter);
-    scene?.addEventListener('exit-vr', onExit);
-    return () => {
-      scene?.removeEventListener('enter-vr', onEnter);
-      scene?.removeEventListener('exit-vr', onExit);
-    };
-  }, []);
+  // Sin tarjetas ni textos en VR
 
   return (
     <a-scene 
@@ -132,26 +102,29 @@ export default function Scene3D() {
         {/* Cursor por mouse sin retícula visual para evitar el círculo azul */}
         <a-entity cursor="rayOrigin: mouse"></a-entity>
       </a-entity>
-      
-      {/* Orbe para iniciar experiencia (sin texto) cuando los proyectos están ocultos */}
-      {!showProjects && (
-        <a-entity position="0 1.6 -2.8">
-          <a-sphere 
-            radius="0.18" 
-            color="#60a5fa" 
-            material="emissive: #60a5fa; emissiveIntensity: 0.6"
-            animation="property: scale; from: 1 1 1; to: 1.2 1.2 1.2; dir: alternate; loop: true; dur: 900"
-            class="clickable"
-            onClick={() => setShowProjects(true)}
-          ></a-sphere>
-          <a-entity
-            position="0 0 -0.02"
-            geometry="primitive: ring; radiusInner: 0.22; radiusOuter: 0.26"
-            material="color: #93c5fd; opacity: 0.6"
-            animation="property: rotation; to: 0 0 360; loop: true; dur: 2500"
-          ></a-entity>
+      {/* Escultura interactiva de bienvenida (sin texto) */}
+      <a-entity position="0 1.6 -3">
+        <a-entity 
+          geometry="primitive: icosahedron; radius: 0.35" 
+          material="color: #60a5fa; metalness: 0.6; roughness: 0.2; emissive: #3b82f6; emissiveIntensity: 0.25" 
+          animation="property: rotation; to: 360 360 0; loop: true; dur: 14000"
+        ></a-entity>
+        <a-entity 
+          animation="property: rotation; to: 0 360 0; loop: true; dur: 9000"
+        >
+          {Array.from({ length: 8 }, (_, i) => (
+            <a-sphere 
+              key={i}
+              position={`${Math.cos((i/8)*Math.PI*2)*0.8} ${Math.sin((i/8)*Math.PI*2)*0.8} 0`} 
+              radius="0.06" 
+              color="#a78bfa" 
+              material="emissive: #a78bfa; emissiveIntensity: 0.6"
+            ></a-sphere>
+          ))}
         </a-entity>
-      )}
+        <a-light type="point" color="#60a5fa" intensity="0.4" distance="5"></a-light>
+        <a-light type="point" position="0 0.5 0.6" color="#a78bfa" intensity="0.3" distance="4"></a-light>
+      </a-entity>
       
       {/* Controles de VR para Oculus Quest */}
       <a-entity 
@@ -238,10 +211,7 @@ export default function Scene3D() {
         opacity="0.3"
       ></a-plane>
 
-      {/* Proyectos en el espacio 3D - visibles cuando showProjects es true */}
-      {showProjects && !loading && projects.map((project) => (
-        <ProjectStand key={project.id} project={project} />
-      ))}
+      {/* (Se removieron las tarjetas de proyectos para una escena limpia) */}
 
       {/* Iluminación ambiente dramática */}
       <a-light type="ambient" color="#4466ff" intensity="0.2"></a-light>
