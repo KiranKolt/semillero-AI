@@ -189,8 +189,8 @@ export default function Scene3D() {
     >
       {/* Audio HTML como fondo (más fiable para autoplay tras interacción) */}
       <audio ref={htmlAudioRef} id="ambient-audio" src={audioSrc} loop style={{ display: 'none' }}></audio>
-      {/* Fondo espacial con estrellas */}
-      <a-sky color="#0a0a1a"></a-sky>
+      {/* Fondo espacial con estrellas - un poco más claro */}
+      <a-sky color="#0f172a"></a-sky>
       
       
       {/* Generar estrellas de fondo con parpadeo sutil */}
@@ -235,6 +235,7 @@ export default function Scene3D() {
       {/* Portales de experiencias en la intro */}
       {experience === 'intro' && (
       <a-entity position="0 1.6 -3">
+        <a-text value="Elige un portal (1 • 2 • 3)" position="0 1 -0.6" align="center" width="4" color="#FFFFFF"></a-text>
         <a-entity 
           geometry="primitive: icosahedron; radius: 0.35" 
           material="color: #60a5fa; metalness: 0.6; roughness: 0.2; emissive: #3b82f6; emissiveIntensity: 0.25" 
@@ -451,11 +452,12 @@ export default function Scene3D() {
 
       {/* (Se removieron las tarjetas de proyectos para una escena limpia) */}
 
-      {/* Iluminación ambiente dramática */}
-      <a-light type="ambient" color="#4466ff" intensity="0.2"></a-light>
-      <a-light type="point" position="0 10 -30" color="#ffffff" intensity="0.5"></a-light>
-      <a-light type="point" position="-15 8 -25" color="#3498DB" intensity="0.3"></a-light>
-      <a-light type="point" position="15 8 -25" color="#2ECC71" intensity="0.3"></a-light>
+      {/* Iluminación más brillante para visibilidad en producción */}
+      <a-light type="ambient" color="#7aa2ff" intensity="0.55"></a-light>
+      <a-light type="hemisphere" color="#ffffff" ground-color="#1e293b" intensity="0.4"></a-light>
+      <a-light type="point" position="0 10 -30" color="#ffffff" intensity="0.85"></a-light>
+      <a-light type="point" position="-15 8 -25" color="#60a5fa" intensity="0.6"></a-light>
+      <a-light type="point" position="15 8 -25" color="#34d399" intensity="0.6"></a-light>
     </a-scene>
   );
 }
