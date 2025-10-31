@@ -10,7 +10,6 @@ import { Project } from '../types/project';
 export default function Scene3D() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
-  const ambientRef = useRef<any>(null);
   const [muted, setMuted] = useState(false);
   const audioSrc = `${import.meta.env.BASE_URL}audio/ambient.mp3`;
   const htmlAudioRef = useRef<HTMLAudioElement | null>(null);
