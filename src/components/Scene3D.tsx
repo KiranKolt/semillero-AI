@@ -149,11 +149,15 @@ export default function Scene3D() {
     const toggleNebula = () => setNebulaCompressed((v) => !v);
     nebulaToggle?.addEventListener('click', toggleNebula);
     // plaza balls
-    const plazaBalls = Array.from(document.querySelectorAll('.plaza-ball')) as HTMLElement[];
+    const plazaBalls = Array.from(document.querySelectorAll('.plaza-orb')) as HTMLElement[];
+    setPlazaTotal(plazaBalls.length);
+    setPlazaScore(0);
     const onBall = (el: HTMLElement) => () => {
       try {
         el.setAttribute('animation__jump', 'property: position; dir: alternate; loop: 2; dur: 400; to: ' + el.getAttribute('position')?.replace(/ ([^ ]+) /, (m)=>m) + '');
         el.setAttribute('material', 'color: #ffffff');
+        el.setAttribute('visible', 'false');
+        setPlazaScore((s) => s + 1);
       } catch {}
     };
     plazaBalls.forEach((el) => el.addEventListener('click', onBall(el)));
@@ -220,7 +224,10 @@ export default function Scene3D() {
           <a-entity cursor="rayOrigin: mouse" raycaster="objects: .clickable"></a-entity>
           {/* Overlay de fundido */}
           <a-plane id="fade" position="0 0 -0.3" width="2" height="2" material="color: black; transparent: true; opacity: 0"></a-plane>
-          {/* (El portal de volver al hub se renderiza en el espacio, no frente a la cámara) */}
+          {/* HUD simple para minijuegos */}
+          {experience === 'plaza' && (
+            <a-text value={`Orbes: ${plazaScore}/${plazaTotal}`} position="0 -0.35 -0.8" align="center" width="2" color="#FFFFFF"></a-text>
+          )}
         </a-entity>
       </a-entity>
       {/* Portales de experiencias en la intro */}
@@ -419,8 +426,8 @@ export default function Scene3D() {
       {experience === 'plaza' && (
         <a-entity>
           <a-plane position="6 -1 -12" width="8" height="8" color="#0b1220" rotation="-90 0 0" opacity="0.6"></a-plane>
-          {Array.from({ length: 9 }, (_, i) => (
-            <a-sphere key={`pz${i}`} class="plaza-ball clickable" position={`${6 + (i%3 -1)*1.6} ${0.5 + Math.random()*1.2} ${-12 + (Math.floor(i/3)-1)*1.6}`} radius="0.35" color="#34d399" animation__b={`property: position; dir: alternate; loop: true; dur: ${1200 + i*150}; to: ${6 + (i%3 -1)*1.6} ${1.6 + Math.random()*0.5} ${-12 + (Math.floor(i/3)-1)*1.6}`}></a-sphere>
+          {Array.from({ length: 12 }, (_, i) => (
+            <a-sphere key={`pz${i}`} class="plaza-ball plaza-orb clickable" position={`${6 + (i%3 -1)*1.6} ${0.6 + Math.random()*1.2} ${-12 + (Math.floor(i/3)-1)*1.6}`} radius="0.32" color="#34d399" animation__b={`property: position; dir: alternate; loop: true; dur: ${1100 + i*120}; to: ${6 + (i%3 -1)*1.6} ${1.5 + Math.random()*0.5} ${-12 + (Math.floor(i/3)-1)*1.6}`}></a-sphere>
           ))}
         </a-entity>
       )}
