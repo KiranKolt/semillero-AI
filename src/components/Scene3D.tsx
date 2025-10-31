@@ -68,7 +68,7 @@ export default function Scene3D() {
       
       {/* Sonido ambiental suave (loop). Se inicia con la primera interacción */}
       <a-entity
-        ref={(el) => (ambientRef.current = el)}
+        ref={(el: HTMLElement | null) => (ambientRef.current = el)}
         sound="src: url(https://assets.mixkit.co/music/preview/mixkit-space-ambient-116.mp3); autoplay: false; loop: true; volume: 0.25; positional: false"
       ></a-entity>
       
