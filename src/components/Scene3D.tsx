@@ -17,7 +17,7 @@ export default function Scene3D() {
   // Componente simple para que un elemento siempre mire a la cámara
   useEffect(() => {
     const AFRAME_ANY: any = (window as any).AFRAME;
-    if (!AFRAME_ANY?.components?.['face-camera']) {
+    if (AFRAME_ANY && !AFRAME_ANY?.components?.['face-camera']) {
       AFRAME_ANY?.registerComponent?.('face-camera', {
         tick: function () {
           try {
@@ -28,6 +28,19 @@ export default function Scene3D() {
             cam.getWorldPosition(target);
             this.el.object3D.lookAt(target);
           } catch {}
+        }
+      });
+    }
+    if (AFRAME_ANY && !AFRAME_ANY?.components?.['pixelated-texture']) {
+      AFRAME_ANY.registerComponent('pixelated-texture', {
+        init: function () {
+          const mat: any = this.el.getObject3D('mesh')?.material;
+          const THREE_ANY: any = (window as any).THREE;
+          if (mat && mat.map && THREE_ANY) {
+            mat.map.minFilter = THREE_ANY.NearestFilter;
+            mat.map.magFilter = THREE_ANY.NearestFilter;
+            mat.map.needsUpdate = true;
+          }
         }
       });
     }
@@ -102,6 +115,10 @@ export default function Scene3D() {
       style={{ height: '100vh', width: '100vw', position: 'fixed', top: 0, left: 0 }}
       vr-mode-ui="enabled: true"
     >
+      {/* Assets para texturas */}
+      <a-assets>
+        <img id="portalTex" src={portalSrc} crossOrigin="anonymous" />
+      </a-assets>
       {/* Audio HTML como fondo (más fiable para autoplay tras interacción) */}
       <audio ref={htmlAudioRef} id="ambient-audio" src={audioSrc} loop style={{ display: 'none' }}></audio>
       {/* Fondo espacial con estrellas */}
@@ -174,7 +191,7 @@ export default function Scene3D() {
         <a-entity position="0 1.3 -2.2">
           {/* Portal Nebula */}
           <a-entity position="-0.9 0 0" class="clickable" onClick={() => teleportTo('-6 0 -12', 'nebula')}>
-            <a-entity geometry="primitive: circle; radius: 0.42" material={`src: ${portalSrc}; transparent: true; side: double; alphaTest: 0.1`} face-camera animation="property: scale; from: 0.95 0.95 0.95; to: 1.05 1.05 1.05; dir: alternate; loop: true; dur: 700"></a-entity>
+            <a-plane width="0.84" height="0.84" material="shader: flat; src: #portalTex; transparent: true; side: double; alphaTest: 0.05" face-camera pixelated-texture animation="property: scale; from: 0.96 0.96 0.96; to: 1.06 1.06 1.06; dir: alternate; loop: true; dur: 650"></a-plane>
             <a-entity geometry="primitive: ring; radiusInner: 0.43; radiusOuter: 0.5" material="color: #60a5fa; opacity: 0.35; transparent: true" face-camera></a-entity>
             <a-entity geometry="primitive: circle; radius: 0.6" material="color: #60a5fa; opacity: 0.12; transparent: true" face-camera animation="property: scale; from: 1 1 1; to: 1.15 1.15 1.15; dir: alternate; loop: true; dur: 1200"></a-entity>
             {Array.from({ length: 12 }, (_, i) => (
@@ -184,7 +201,7 @@ export default function Scene3D() {
           </a-entity>
           {/* Portal Tunnel */}
           <a-entity position="0 0 0" class="clickable" onClick={() => teleportTo('0 0 -14', 'tunnel')}>
-            <a-entity geometry="primitive: circle; radius: 0.42" material={`src: ${portalSrc}; transparent: true; side: double; alphaTest: 0.1`} face-camera animation="property: scale; from: 0.95 0.95 0.95; to: 1.05 1.05 1.05; dir: alternate; loop: true; dur: 700"></a-entity>
+            <a-plane width="0.84" height="0.84" material="shader: flat; src: #portalTex; transparent: true; side: double; alphaTest: 0.05" face-camera pixelated-texture animation="property: scale; from: 0.96 0.96 0.96; to: 1.06 1.06 1.06; dir: alternate; loop: true; dur: 650"></a-plane>
             <a-entity geometry="primitive: ring; radiusInner: 0.43; radiusOuter: 0.5" material="color: #a78bfa; opacity: 0.35; transparent: true" face-camera></a-entity>
             <a-entity geometry="primitive: circle; radius: 0.6" material="color: #a78bfa; opacity: 0.12; transparent: true" face-camera animation="property: scale; from: 1 1 1; to: 1.15 1.15 1.15; dir: alternate; loop: true; dur: 1200"></a-entity>
             {Array.from({ length: 12 }, (_, i) => (
@@ -194,7 +211,7 @@ export default function Scene3D() {
           </a-entity>
           {/* Portal Plaza */}
           <a-entity position="0.9 0 0" class="clickable" onClick={() => teleportTo('6 0 -12', 'plaza')}>
-            <a-entity geometry="primitive: circle; radius: 0.42" material={`src: ${portalSrc}; transparent: true; side: double; alphaTest: 0.1`} face-camera animation="property: scale; from: 0.95 0.95 0.95; to: 1.05 1.05 1.05; dir: alternate; loop: true; dur: 700"></a-entity>
+            <a-plane width="0.84" height="0.84" material="shader: flat; src: #portalTex; transparent: true; side: double; alphaTest: 0.05" face-camera pixelated-texture animation="property: scale; from: 0.96 0.96 0.96; to: 1.06 1.06 1.06; dir: alternate; loop: true; dur: 650"></a-plane>
             <a-entity geometry="primitive: ring; radiusInner: 0.43; radiusOuter: 0.5" material="color: #34d399; opacity: 0.35; transparent: true" face-camera></a-entity>
             <a-entity geometry="primitive: circle; radius: 0.6" material="color: #34d399; opacity: 0.12; transparent: true" face-camera animation="property: scale; from: 1 1 1; to: 1.15 1.15 1.15; dir: alternate; loop: true; dur: 1200"></a-entity>
             {Array.from({ length: 12 }, (_, i) => (
