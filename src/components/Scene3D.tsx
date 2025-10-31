@@ -140,6 +140,13 @@ export default function Scene3D() {
       home?.removeEventListener('click', goHome);
     };
   }, [experience]);
+
+  const getHomePortalPosition = (exp: Experience): string => {
+    if (exp === 'nebula') return '-5.2 1.2 -11.2';
+    if (exp === 'tunnel') return '1.2 1.2 -13';
+    if (exp === 'plaza') return '7.2 1.2 -11.2';
+    return '0 1.2 -2.5';
+  };
   // Sin tarjetas ni textos en VR
 
   return (
@@ -187,16 +194,7 @@ export default function Scene3D() {
           <a-entity cursor="rayOrigin: mouse" raycaster="objects: .clickable"></a-entity>
           {/* Overlay de fundido */}
           <a-plane id="fade" position="0 0 -0.3" width="2" height="2" material="color: black; transparent: true; opacity: 0"></a-plane>
-          {/* Portal pequeño para volver al hub cuando no estamos en intro */}
-          {experience !== 'intro' && (
-            <a-entity position="0 -0.2 -1.2">
-              <a-entity face-camera>
-                <a-entity geometry="primitive: circle; radius: 0.18" material="color: #22d3ee; opacity: 0.25; transparent: true; side: double; depthTest: false"></a-entity>
-                <a-entity geometry="primitive: ring; radiusInner: 0.18; radiusOuter: 0.26" material="shader: flat; color: #22d3ee; emissive: #22d3ee; emissiveIntensity: 0.9; transparent: true; opacity: 0.85; side: double; blending: additive; depthTest: false"></a-entity>
-              </a-entity>
-              <a-entity id="portal-home" class="clickable" geometry="primitive: circle; radius: 0.26" material="color: #fff; opacity: 0; transparent: true"></a-entity>
-            </a-entity>
-          )}
+          {/* (El portal de volver al hub se renderiza en el espacio, no frente a la cámara) */}
         </a-entity>
       </a-entity>
       {/* Portales de experiencias en la intro */}
