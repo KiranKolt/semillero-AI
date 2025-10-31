@@ -66,11 +66,11 @@ export default function Scene3D() {
     const rig = document.getElementById('rig');
     if (!rig) return;
     try {
-      fade?.setAttribute('material', 'opacity', 1);
+      fade?.setAttribute('material', 'opacity: 1');
       setTimeout(() => {
         rig.setAttribute('position', position);
         setExperience(next);
-        setTimeout(() => fade?.setAttribute('material', 'opacity', 0), 250);
+        setTimeout(() => fade?.setAttribute('material', 'opacity: 0'), 250);
       }, 250);
     } catch {}
   };
