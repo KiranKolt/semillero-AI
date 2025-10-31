@@ -166,7 +166,6 @@ export default function Scene3D() {
           </a-entity>
         </a-entity>
       )}
-      </a-entity>
       
       {/* Controles de VR para Oculus Quest */}
       <a-entity 
