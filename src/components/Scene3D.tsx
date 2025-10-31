@@ -104,12 +104,8 @@ export default function Scene3D() {
         wasd-controls="enabled: true"
         position="0 1.8 0"
       >
-        <a-entity
-          cursor="fuse: true; fuseTimeout: 1000"
-          position="0 0 -1"
-          geometry="primitive: ring"
-          material="color: #4CC3D9"
-        ></a-entity>
+        {/* Cursor por mouse sin retícula visual para evitar el círculo azul */}
+        <a-entity cursor="rayOrigin: mouse"></a-entity>
       </a-entity>
       
       {/* Controles de VR para Oculus Quest */}
