@@ -10,8 +10,28 @@ type Experience = 'intro' | 'nebula' | 'tunnel' | 'plaza'
 export default function Scene3D() {
   const [muted, setMuted] = useState(false);
   const audioSrc = `${import.meta.env.BASE_URL}audio/ambient.mp3`;
+  const portalSrc = `${import.meta.env.BASE_URL}textures/portal.gif`;
   const htmlAudioRef = useRef<HTMLAudioElement | null>(null);
   const [experience, setExperience] = useState<Experience>('intro');
+
+  // Componente simple para que un elemento siempre mire a la cámara
+  useEffect(() => {
+    const AFRAME_ANY: any = (window as any).AFRAME;
+    if (!AFRAME_ANY?.components?.['face-camera']) {
+      AFRAME_ANY?.registerComponent?.('face-camera', {
+        tick: function () {
+          try {
+            const THREE_ANY: any = (window as any).THREE;
+            const cam = this.el.sceneEl.camera;
+            if (!cam || !THREE_ANY) return;
+            const target = new THREE_ANY.Vector3();
+            cam.getWorldPosition(target);
+            this.el.object3D.lookAt(target);
+          } catch {}
+        }
+      });
+    }
+  }, []);
 
   // (Se removió la carga de proyectos para evitar textos en VR)
 
@@ -149,20 +169,38 @@ export default function Scene3D() {
       </a-entity>
       )}
 
-      {/* Portales clicables */}
+      {/* Portales clicables con sprite animado tipo pixel-art + glow + partículas */}
       {experience === 'intro' && (
         <a-entity position="0 1.3 -2.2">
+          {/* Portal Nebula */}
           <a-entity position="-0.9 0 0" class="clickable" onClick={() => teleportTo('-6 0 -12', 'nebula')}>
-            <a-torus radius="0.35" radius-tubular="0.06" color="#60a5fa" opacity="0.6" animation="property: rotation; to: 0 360 0; loop: true; dur: 4000"></a-torus>
-            <a-sphere radius="0.1" color="#60a5fa" material="emissive: #60a5fa"></a-sphere>
+            <a-entity geometry="primitive: circle; radius: 0.42" material={`src: ${portalSrc}; transparent: true; side: double; alphaTest: 0.1`} face-camera animation="property: scale; from: 0.95 0.95 0.95; to: 1.05 1.05 1.05; dir: alternate; loop: true; dur: 700"></a-entity>
+            <a-entity geometry="primitive: ring; radiusInner: 0.43; radiusOuter: 0.5" material="color: #60a5fa; opacity: 0.35; transparent: true" face-camera></a-entity>
+            <a-entity geometry="primitive: circle; radius: 0.6" material="color: #60a5fa; opacity: 0.12; transparent: true" face-camera animation="property: scale; from: 1 1 1; to: 1.15 1.15 1.15; dir: alternate; loop: true; dur: 1200"></a-entity>
+            {Array.from({ length: 12 }, (_, i) => (
+              <a-sphere key={`pb${i}`} radius="0.02" color="#60a5fa" material="emissive: #60a5fa; emissiveIntensity: 0.9" position="0 0 0" animation__p={`property: position; to: ${Math.cos((i/12)*Math.PI*2)*0.8} ${Math.sin((i/12)*Math.PI*2)*0.8} ${0.15}; dur: ${900+ i*40}; dir: alternate; loop: true; delay: ${i*60}`}></a-sphere>
+            ))}
+            <a-light type="point" color="#60a5fa" intensity="0.6" distance="3"></a-light>
           </a-entity>
+          {/* Portal Tunnel */}
           <a-entity position="0 0 0" class="clickable" onClick={() => teleportTo('0 0 -14', 'tunnel')}>
-            <a-torus radius="0.35" radius-tubular="0.06" color="#a78bfa" opacity="0.6" animation="property: rotation; to: 360 0 0; loop: true; dur: 4000"></a-torus>
-            <a-sphere radius="0.1" color="#a78bfa" material="emissive: #a78bfa"></a-sphere>
+            <a-entity geometry="primitive: circle; radius: 0.42" material={`src: ${portalSrc}; transparent: true; side: double; alphaTest: 0.1`} face-camera animation="property: scale; from: 0.95 0.95 0.95; to: 1.05 1.05 1.05; dir: alternate; loop: true; dur: 700"></a-entity>
+            <a-entity geometry="primitive: ring; radiusInner: 0.43; radiusOuter: 0.5" material="color: #a78bfa; opacity: 0.35; transparent: true" face-camera></a-entity>
+            <a-entity geometry="primitive: circle; radius: 0.6" material="color: #a78bfa; opacity: 0.12; transparent: true" face-camera animation="property: scale; from: 1 1 1; to: 1.15 1.15 1.15; dir: alternate; loop: true; dur: 1200"></a-entity>
+            {Array.from({ length: 12 }, (_, i) => (
+              <a-sphere key={`pc${i}`} radius="0.02" color="#a78bfa" material="emissive: #a78bfa; emissiveIntensity: 0.9" position="0 0 0" animation__p={`property: position; to: ${Math.cos((i/12)*Math.PI*2)*0.8} ${Math.sin((i/12)*Math.PI*2)*0.8} ${0.15}; dur: ${900+ i*40}; dir: alternate; loop: true; delay: ${i*60}`}></a-sphere>
+            ))}
+            <a-light type="point" color="#a78bfa" intensity="0.6" distance="3"></a-light>
           </a-entity>
+          {/* Portal Plaza */}
           <a-entity position="0.9 0 0" class="clickable" onClick={() => teleportTo('6 0 -12', 'plaza')}>
-            <a-torus radius="0.35" radius-tubular="0.06" color="#34d399" opacity="0.6" animation="property: rotation; to: 0 0 360; loop: true; dur: 4000"></a-torus>
-            <a-sphere radius="0.1" color="#34d399" material="emissive: #34d399"></a-sphere>
+            <a-entity geometry="primitive: circle; radius: 0.42" material={`src: ${portalSrc}; transparent: true; side: double; alphaTest: 0.1`} face-camera animation="property: scale; from: 0.95 0.95 0.95; to: 1.05 1.05 1.05; dir: alternate; loop: true; dur: 700"></a-entity>
+            <a-entity geometry="primitive: ring; radiusInner: 0.43; radiusOuter: 0.5" material="color: #34d399; opacity: 0.35; transparent: true" face-camera></a-entity>
+            <a-entity geometry="primitive: circle; radius: 0.6" material="color: #34d399; opacity: 0.12; transparent: true" face-camera animation="property: scale; from: 1 1 1; to: 1.15 1.15 1.15; dir: alternate; loop: true; dur: 1200"></a-entity>
+            {Array.from({ length: 12 }, (_, i) => (
+              <a-sphere key={`pg${i}`} radius="0.02" color="#34d399" material="emissive: #34d399; emissiveIntensity: 0.9" position="0 0 0" animation__p={`property: position; to: ${Math.cos((i/12)*Math.PI*2)*0.8} ${Math.sin((i/12)*Math.PI*2)*0.8} ${0.15}; dur: ${900+ i*40}; dir: alternate; loop: true; delay: ${i*60}`}></a-sphere>
+            ))}
+            <a-light type="point" color="#34d399" intensity="0.6" distance="3"></a-light>
           </a-entity>
         </a-entity>
       )}
