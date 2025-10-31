@@ -36,7 +36,7 @@ export default function Scene3D() {
         if (sceneEl?.audioListener?.context?.state === 'suspended') {
           sceneEl.audioListener.context.resume();
         }
-        const el: any = ambientRef.current;
+        const el: any = ambientRef.current || document.querySelector('[sound]');
         const sound = el?.components?.sound;
         if (sound) {
           sound.stopSound?.();
@@ -63,13 +63,17 @@ export default function Scene3D() {
       style={{ height: '100vh', width: '100vw', position: 'fixed', top: 0, left: 0 }}
       vr-mode-ui="enabled: true"
     >
+      {/* Assets (preload de audio para evitar CORS/autoplay issues) */}
+      <a-assets>
+        <audio id="ambient-audio" src="https://assets.mixkit.co/music/preview/mixkit-space-ambient-116.mp3" crossorigin="anonymous"></audio>
+      </a-assets>
       {/* Fondo espacial con estrellas */}
       <a-sky color="#0a0a1a"></a-sky>
       
       {/* Sonido ambiental suave (loop). Se inicia con la primera interacción */}
       <a-entity
         ref={(el: HTMLElement | null) => (ambientRef.current = el)}
-        sound="src: url(https://assets.mixkit.co/music/preview/mixkit-space-ambient-116.mp3); autoplay: false; loop: true; volume: 0.25; positional: false"
+        sound="src: #ambient-audio; autoplay: false; loop: true; volume: 0.25; positional: false"
       ></a-entity>
       
       {/* Generar estrellas de fondo con parpadeo sutil */}
@@ -120,25 +124,6 @@ export default function Scene3D() {
 
       {/* Elementos decorativos inmersivos con animaciones suaves */}
       <a-entity>
-        {/* Portal de anillos giratorios */}
-        <a-torus 
-          position="0 1.8 -18" 
-          radius="7" 
-          radius-tubular="0.25" 
-          color="#38bdf8" 
-          opacity="0.12"
-          material="metalness: 0.8; roughness: 0.2"
-          animation="property: rotation; to: 0 360 0; dur: 40000; loop: true"
-        ></a-torus>
-        <a-torus 
-          position="0 1.8 -18" 
-          radius="5.4" 
-          radius-tubular="0.15" 
-          color="#a78bfa" 
-          opacity="0.18"
-          animation="property: rotation; to: 360 0 0; dur: 30000; loop: true"
-        ></a-torus>
-
         {/* Esfera azul grande rotando lentamente */}
         <a-sphere 
           position="-12 8 -30" 
