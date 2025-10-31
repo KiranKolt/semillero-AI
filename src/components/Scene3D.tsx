@@ -5,10 +5,13 @@ import { useEffect, useRef, useState } from 'react';
 /**
  * Escena 3D inmersiva - Versión funcional y simple
  */
+type Experience = 'intro' | 'nebula' | 'tunnel' | 'plaza'
+
 export default function Scene3D() {
   const [muted, setMuted] = useState(false);
   const audioSrc = `${import.meta.env.BASE_URL}audio/ambient.mp3`;
   const htmlAudioRef = useRef<HTMLAudioElement | null>(null);
+  const [experience, setExperience] = useState<Experience>('intro');
 
   // (Se removió la carga de proyectos para evitar textos en VR)
 
@@ -57,6 +60,20 @@ export default function Scene3D() {
     }
   }, [muted]);
 
+  // Teleport con fundido
+  const teleportTo = (position: string, next: Experience) => {
+    const fade = document.getElementById('fade');
+    const rig = document.getElementById('rig');
+    if (!rig) return;
+    try {
+      fade?.setAttribute('material', 'opacity', 1);
+      setTimeout(() => {
+        rig.setAttribute('position', position);
+        setExperience(next);
+        setTimeout(() => fade?.setAttribute('material', 'opacity', 0), 250);
+      }, 250);
+    } catch {}
+  };
   // Sin tarjetas ni textos en VR
 
   return (
@@ -92,17 +109,22 @@ export default function Scene3D() {
         )
       })}
 
-      {/* Cámara con controles VR */}
-      <a-entity 
-        camera 
-        look-controls
-        wasd-controls="enabled: true"
-        position="0 1.8 0"
-      >
-        {/* Cursor por mouse sin retícula visual para evitar el círculo azul */}
-        <a-entity cursor="rayOrigin: mouse"></a-entity>
+      {/* Cámara con rig para permitir teleport suave */}
+      <a-entity id="rig" position="0 0 0">
+        <a-entity 
+          camera 
+          look-controls
+          wasd-controls="enabled: true"
+          position="0 1.8 0"
+        >
+          {/* Cursor por mouse sin retícula visual para evitar el círculo azul */}
+          <a-entity cursor="rayOrigin: mouse"></a-entity>
+          {/* Overlay de fundido */}
+          <a-plane id="fade" position="0 0 -0.3" width="2" height="2" material="color: black; transparent: true; opacity: 0"></a-plane>
+        </a-entity>
       </a-entity>
-      {/* Escultura interactiva de bienvenida (sin texto) */}
+      {/* Portales de experiencias en la intro */}
+      {experience === 'intro' && (
       <a-entity position="0 1.6 -3">
         <a-entity 
           geometry="primitive: icosahedron; radius: 0.35" 
@@ -124,6 +146,26 @@ export default function Scene3D() {
         </a-entity>
         <a-light type="point" color="#60a5fa" intensity="0.4" distance="5"></a-light>
         <a-light type="point" position="0 0.5 0.6" color="#a78bfa" intensity="0.3" distance="4"></a-light>
+      </a-entity>
+      )}
+
+      {/* Portales clicables */}
+      {experience === 'intro' && (
+        <a-entity position="0 1.3 -2.2">
+          <a-entity position="-0.9 0 0" class="clickable" onClick={() => teleportTo('-6 0 -12', 'nebula')}>
+            <a-torus radius="0.35" radius-tubular="0.06" color="#60a5fa" opacity="0.6" animation="property: rotation; to: 0 360 0; loop: true; dur: 4000"></a-torus>
+            <a-sphere radius="0.1" color="#60a5fa" material="emissive: #60a5fa"></a-sphere>
+          </a-entity>
+          <a-entity position="0 0 0" class="clickable" onClick={() => teleportTo('0 0 -14', 'tunnel')}>
+            <a-torus radius="0.35" radius-tubular="0.06" color="#a78bfa" opacity="0.6" animation="property: rotation; to: 360 0 0; loop: true; dur: 4000"></a-torus>
+            <a-sphere radius="0.1" color="#a78bfa" material="emissive: #a78bfa"></a-sphere>
+          </a-entity>
+          <a-entity position="0.9 0 0" class="clickable" onClick={() => teleportTo('6 0 -12', 'plaza')}>
+            <a-torus radius="0.35" radius-tubular="0.06" color="#34d399" opacity="0.6" animation="property: rotation; to: 0 0 360; loop: true; dur: 4000"></a-torus>
+            <a-sphere radius="0.1" color="#34d399" material="emissive: #34d399"></a-sphere>
+          </a-entity>
+        </a-entity>
+      )}
       </a-entity>
       
       {/* Controles de VR para Oculus Quest */}
@@ -201,15 +243,32 @@ export default function Scene3D() {
         ></a-sphere>
       </a-entity>
       
-      {/* Suelo distante casi invisible */}
-      <a-plane 
-        position="0 -5 -50" 
-        width="100" 
-        height="100" 
-        color="#000011" 
-        rotation="-90 0 0"
-        opacity="0.3"
-      ></a-plane>
+      {/* Suelos/escenas por experiencia */}
+      {experience === 'nebula' && (
+        <a-entity>
+          {Array.from({ length: 40 }, (_, i) => (
+            <a-sphere key={i} position={`${(Math.random()-0.5)*6} ${1+Math.random()*3} ${-12 + (Math.random()-0.5)*4}`} radius={`${0.1 + Math.random()*0.4}`} color="#7dd3fc" material="emissive: #7dd3fc; emissiveIntensity: 0.5; metalness: 0.1; roughness: 0.6" opacity="0.8"></a-sphere>
+          ))}
+          <a-light type="point" position="0 2 -12" color="#93c5fd" intensity="0.8"></a-light>
+        </a-entity>
+      )}
+
+      {experience === 'tunnel' && (
+        <a-entity>
+          {Array.from({ length: 12 }, (_, i) => (
+            <a-torus key={i} position={`0 1.6 ${-10 - i*1.2}`} radius="1.5" radius-tubular="0.08" color="#a78bfa" opacity={`${0.25 + (i/20)}`} animation="property: rotation; to: 0 360 0; loop: true; dur: ${3000 + i*200}"></a-torus>
+          ))}
+        </a-entity>
+      )}
+
+      {experience === 'plaza' && (
+        <a-entity>
+          <a-plane position="6 -1 -12" width="8" height="8" color="#0b1220" rotation="-90 0 0" opacity="0.6"></a-plane>
+          {Array.from({ length: 9 }, (_, i) => (
+            <a-sphere key={i} position={`${6 + (i%3 -1)*1.6} ${0.5 + Math.random()*1.2} ${-12 + (Math.floor(i/3)-1)*1.6}`} radius="0.35" color="#34d399" animation__b="property: position; dir: alternate; loop: true; dur: ${1200 + i*150}; to: ${6 + (i%3 -1)*1.6} ${1.6 + Math.random()*0.5} ${-12 + (Math.floor(i/3)-1)*1.6}"></a-sphere>
+          ))}
+        </a-entity>
+      )}
 
       {/* (Se removieron las tarjetas de proyectos para una escena limpia) */}
 
