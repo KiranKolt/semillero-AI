@@ -13,6 +13,8 @@ export default function Scene3D() {
   const htmlAudioRef = useRef<HTMLAudioElement | null>(null);
   const [experience, setExperience] = useState<Experience>('intro');
   const [nebulaCompressed, setNebulaCompressed] = useState(false);
+  const [plazaScore, setPlazaScore] = useState<number>(0);
+  const [plazaTotal, setPlazaTotal] = useState<number>(0);
 
   // Componente simple para que un elemento siempre mire a la cámara
   useEffect(() => {
@@ -157,7 +159,7 @@ export default function Scene3D() {
         el.setAttribute('animation__jump', 'property: position; dir: alternate; loop: 2; dur: 400; to: ' + el.getAttribute('position')?.replace(/ ([^ ]+) /, (m)=>m) + '');
         el.setAttribute('material', 'color: #ffffff');
         el.setAttribute('visible', 'false');
-        setPlazaScore((s) => s + 1);
+        setPlazaScore((s: number) => s + 1);
       } catch {}
     };
     plazaBalls.forEach((el) => el.addEventListener('click', onBall(el)));
