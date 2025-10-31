@@ -282,6 +282,17 @@ export default function Scene3D() {
         </a-entity>
       )}
       
+      {/* Portal libre para volver al hub, ubicado en la sala actual */}
+      {experience !== 'intro' && (
+        <a-entity position={getHomePortalPosition(experience)}>
+          <a-entity face-camera>
+            <a-entity geometry="primitive: circle; radius: 0.18" material="color: #22d3ee; opacity: 0.25; transparent: true; side: double; depthTest: false"></a-entity>
+            <a-entity geometry="primitive: ring; radiusInner: 0.18; radiusOuter: 0.26" material="shader: flat; color: #22d3ee; emissive: #22d3ee; emissiveIntensity: 0.9; transparent: true; opacity: 0.85; side: double; blending: additive; depthTest: false"></a-entity>
+            <a-entity id="portal-home" class="clickable" geometry="primitive: circle; radius: 0.26" material="color: #fff; opacity: 0; transparent: true"></a-entity>
+          </a-entity>
+        </a-entity>
+      )}
+
       {/* Controles con rayos para apuntar y hacer click en .clickable */}
       <a-entity laser-controls="hand: left" raycaster="objects: .clickable"></a-entity>
       <a-entity laser-controls="hand: right" raycaster="objects: .clickable"></a-entity>
