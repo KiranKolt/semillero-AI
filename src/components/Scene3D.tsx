@@ -144,14 +144,12 @@ export default function Scene3D() {
             class="clickable"
             onClick={() => setShowProjects(true)}
           ></a-sphere>
-          <a-ring
+          <a-entity
             position="0 0 -0.02"
-            radius-inner="0.22"
-            radius-outer="0.26"
-            color="#93c5fd"
-            opacity="0.6"
+            geometry="primitive: ring; radiusInner: 0.22; radiusOuter: 0.26"
+            material="color: #93c5fd; opacity: 0.6"
             animation="property: rotation; to: 0 0 360; loop: true; dur: 2500"
-          ></a-ring>
+          ></a-entity>
         </a-entity>
       )}
       
