@@ -12,6 +12,7 @@ export default function Scene3D() {
   const [loading, setLoading] = useState(true);
   const ambientRef = useRef<any>(null);
   const [muted, setMuted] = useState(false);
+  const audioSrc = `${import.meta.env.BASE_URL}audio/ambient.mp3`;
 
   useEffect(() => {
     loadProjects();
@@ -86,8 +87,8 @@ export default function Scene3D() {
     >
       {/* Assets (preload de audio para evitar CORS/autoplay issues) */}
       <a-assets>
-        {/* Coloca tu archivo en public/audio/ambient.mp3 */}
-        <audio id="ambient-audio" src="/audio/ambient.mp3"></audio>
+        {/* Coloca tu archivo en public/ambient.mp3 para despliegues con base path */}
+        <audio id="ambient-audio" src={audioSrc}></audio>
       </a-assets>
       {/* Fondo espacial con estrellas */}
       <a-sky color="#0a0a1a"></a-sky>
