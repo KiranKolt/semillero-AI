@@ -11,6 +11,7 @@ export default function Scene3D() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const ambientRef = useRef<any>(null);
+  const [muted, setMuted] = useState(false);
 
   useEffect(() => {
     loadProjects();
@@ -57,6 +58,26 @@ export default function Scene3D() {
     };
   }, []);
 
+  // Atajo: tecla "m" para silenciar/activar
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key.toLowerCase() === 'm') {
+        setMuted((v) => !v);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  // Aplica el volumen cuando cambia muted
+  useEffect(() => {
+    const el: any = ambientRef.current || document.querySelector('[sound]');
+    const vol = muted ? 0 : 0.25;
+    try {
+      if (el) el.setAttribute('sound', 'volume', vol);
+    } catch {}
+  }, [muted]);
+
   return (
     <a-scene 
       embedded 
@@ -65,7 +86,8 @@ export default function Scene3D() {
     >
       {/* Assets (preload de audio para evitar CORS/autoplay issues) */}
       <a-assets>
-        <audio id="ambient-audio" src="https://assets.mixkit.co/music/preview/mixkit-space-ambient-116.mp3" crossOrigin="anonymous"></audio>
+        {/* Coloca tu archivo en public/audio/ambient.mp3 */}
+        <audio id="ambient-audio" src="/audio/ambient.mp3"></audio>
       </a-assets>
       {/* Fondo espacial con estrellas */}
       <a-sky color="#0a0a1a"></a-sky>
