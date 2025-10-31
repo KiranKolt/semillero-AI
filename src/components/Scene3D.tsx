@@ -13,6 +13,7 @@ export default function Scene3D() {
   const [muted, setMuted] = useState(false);
   const audioSrc = `${import.meta.env.BASE_URL}audio/ambient.mp3`;
   const htmlAudioRef = useRef<HTMLAudioElement | null>(null);
+  const [showProjects, setShowProjects] = useState(true);
 
   useEffect(() => {
     loadProjects();
@@ -75,6 +76,19 @@ export default function Scene3D() {
     }
   }, [muted]);
 
+  // Al entrar a VR ocultamos proyectos; al salir los mostramos de nuevo
+  useEffect(() => {
+    const scene = document.querySelector('a-scene');
+    const onEnter = () => setShowProjects(false);
+    const onExit = () => setShowProjects(true);
+    scene?.addEventListener('enter-vr', onEnter);
+    scene?.addEventListener('exit-vr', onExit);
+    return () => {
+      scene?.removeEventListener('enter-vr', onEnter);
+      scene?.removeEventListener('exit-vr', onExit);
+    };
+  }, []);
+
   return (
     <a-scene 
       embedded 
@@ -118,6 +132,28 @@ export default function Scene3D() {
         {/* Cursor por mouse sin retícula visual para evitar el círculo azul */}
         <a-entity cursor="rayOrigin: mouse"></a-entity>
       </a-entity>
+      
+      {/* Orbe para iniciar experiencia (sin texto) cuando los proyectos están ocultos */}
+      {!showProjects && (
+        <a-entity position="0 1.6 -2.8">
+          <a-sphere 
+            radius="0.18" 
+            color="#60a5fa" 
+            material="emissive: #60a5fa; emissiveIntensity: 0.6"
+            animation="property: scale; from: 1 1 1; to: 1.2 1.2 1.2; dir: alternate; loop: true; dur: 900"
+            class="clickable"
+            onClick={() => setShowProjects(true)}
+          ></a-sphere>
+          <a-ring
+            position="0 0 -0.02"
+            radius-inner="0.22"
+            radius-outer="0.26"
+            color="#93c5fd"
+            opacity="0.6"
+            animation="property: rotation; to: 0 0 360; loop: true; dur: 2500"
+          ></a-ring>
+        </a-entity>
+      )}
       
       {/* Controles de VR para Oculus Quest */}
       <a-entity 
@@ -204,8 +240,8 @@ export default function Scene3D() {
         opacity="0.3"
       ></a-plane>
 
-      {/* Proyectos en el espacio 3D - Más lejos para no molestar */}
-      {!loading && projects.map((project) => (
+      {/* Proyectos en el espacio 3D - visibles cuando showProjects es true */}
+      {showProjects && !loading && projects.map((project) => (
         <ProjectStand key={project.id} project={project} />
       ))}
 
