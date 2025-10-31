@@ -188,13 +188,15 @@ export default function Scene3D() {
           <a-entity position="-0.9 0 0" class="clickable" onClick={() => teleportTo('-6 0 -12', 'nebula')}>
             <a-entity face-camera>
               {/* núcleo */}
-              <a-entity geometry="primitive: circle; radius: 0.28" material="color: #0ea5e9; opacity: 0.12; transparent: true"></a-entity>
+              <a-entity geometry="primitive: circle; radius: 0.28" material="color: #0ea5e9; opacity: 0.2; transparent: true; side: double; depthTest: false"></a-entity>
+              {/* anillo base brillante */}
+              <a-entity geometry="primitive: ring; radiusInner: 0.28; radiusOuter: 0.42" material="shader: flat; color: #38bdf8; emissive: #38bdf8; emissiveIntensity: 0.9; transparent: true; opacity: 0.85; side: double; blending: additive; depthTest: false"></a-entity>
               {/* arcos giratorios */}
               {Array.from({ length: 5 }, (_, j) => (
-                <a-entity key={`na${j}`} geometry={`primitive: ring; radiusInner: ${0.3 + j*0.06}; radiusOuter: ${0.34 + j*0.06}; thetaStart: ${j%2===0?20:200}; thetaLength: 90`} material="color: #60a5fa; emissive: #60a5fa; emissiveIntensity: 0.5; transparent: true; opacity: 0.9" animation={`property: rotation; to: 0 0 ${j%2===0?360:-360}; loop: true; dur: ${3000 + j*500}`}></a-entity>
+                <a-entity key={`na${j}`} geometry={`primitive: ring; radiusInner: ${0.3 + j*0.06}; radiusOuter: ${0.34 + j*0.06}; thetaStart: ${j%2===0?20:200}; thetaLength: 90`} material="shader: flat; color: #60a5fa; emissive: #60a5fa; emissiveIntensity: 0.8; transparent: true; opacity: 0.95; side: double; blending: additive; depthTest: false" animation={`property: rotation; to: 0 0 ${j%2===0?360:-360}; loop: true; dur: ${3000 + j*500}`}></a-entity>
               ))}
               {/* halo */}
-              <a-entity geometry="primitive: circle; radius: 0.6" material="color: #60a5fa; opacity: 0.1; transparent: true" animation="property: scale; from: 1 1 1; to: 1.12 1.12 1.12; dir: alternate; loop: true; dur: 1000"></a-entity>
+              <a-entity geometry="primitive: circle; radius: 0.6" material="color: #60a5fa; opacity: 0.18; transparent: true; side: double; depthTest: false" animation="property: scale; from: 1 1 1; to: 1.12 1.12 1.12; dir: alternate; loop: true; dur: 1000"></a-entity>
               {/* partículas */}
               {Array.from({ length: 14 }, (_, i) => (
                 <a-sphere key={`np${i}`} radius="0.02" color="#60a5fa" material="emissive: #60a5fa; emissiveIntensity: 0.9" position="0 0 0" animation__p={`property: position; to: ${Math.cos((i/14)*Math.PI*2)*0.85} ${Math.sin((i/14)*Math.PI*2)*0.85} ${0.1}; dur: ${800 + i*35}; dir: alternate; loop: true; delay: ${i*50}`}></a-sphere>
@@ -206,10 +208,11 @@ export default function Scene3D() {
           <a-entity position="0 0 0" class="clickable" onClick={() => teleportTo('0 0 -14', 'tunnel')}>
             <a-entity face-camera>
               <a-entity geometry="primitive: circle; radius: 0.28" material="color: #8b5cf6; opacity: 0.12; transparent: true"></a-entity>
+              <a-entity geometry="primitive: ring; radiusInner: 0.28; radiusOuter: 0.42" material="shader: flat; color: #a78bfa; emissive: #a78bfa; emissiveIntensity: 0.9; transparent: true; opacity: 0.85; side: double; blending: additive; depthTest: false"></a-entity>
               {Array.from({ length: 5 }, (_, j) => (
-                <a-entity key={`ta${j}`} geometry={`primitive: ring; radiusInner: ${0.3 + j*0.06}; radiusOuter: ${0.34 + j*0.06}; thetaStart: ${j%2===0?0:180}; thetaLength: 90`} material="color: #a78bfa; emissive: #a78bfa; emissiveIntensity: 0.5; transparent: true; opacity: 0.9" animation={`property: rotation; to: 0 0 ${j%2===0?360:-360}; loop: true; dur: ${3000 + j*500}`}></a-entity>
+                <a-entity key={`ta${j}`} geometry={`primitive: ring; radiusInner: ${0.3 + j*0.06}; radiusOuter: ${0.34 + j*0.06}; thetaStart: ${j%2===0?0:180}; thetaLength: 90`} material="shader: flat; color: #a78bfa; emissive: #a78bfa; emissiveIntensity: 0.8; transparent: true; opacity: 0.95; side: double; blending: additive; depthTest: false" animation={`property: rotation; to: 0 0 ${j%2===0?360:-360}; loop: true; dur: ${3000 + j*500}`}></a-entity>
               ))}
-              <a-entity geometry="primitive: circle; radius: 0.6" material="color: #a78bfa; opacity: 0.1; transparent: true" animation="property: scale; from: 1 1 1; to: 1.12 1.12 1.12; dir: alternate; loop: true; dur: 1000"></a-entity>
+              <a-entity geometry="primitive: circle; radius: 0.6" material="color: #a78bfa; opacity: 0.18; transparent: true; side: double; depthTest: false" animation="property: scale; from: 1 1 1; to: 1.12 1.12 1.12; dir: alternate; loop: true; dur: 1000"></a-entity>
               {Array.from({ length: 14 }, (_, i) => (
                 <a-sphere key={`tp${i}`} radius="0.02" color="#a78bfa" material="emissive: #a78bfa; emissiveIntensity: 0.9" position="0 0 0" animation__p={`property: position; to: ${Math.cos((i/14)*Math.PI*2)*0.85} ${Math.sin((i/14)*Math.PI*2)*0.85} ${0.1}; dur: ${800 + i*35}; dir: alternate; loop: true; delay: ${i*50}`}></a-sphere>
               ))}
@@ -220,10 +223,11 @@ export default function Scene3D() {
           <a-entity position="0.9 0 0" class="clickable" onClick={() => teleportTo('6 0 -12', 'plaza')}>
             <a-entity face-camera>
               <a-entity geometry="primitive: circle; radius: 0.28" material="color: #10b981; opacity: 0.12; transparent: true"></a-entity>
+              <a-entity geometry="primitive: ring; radiusInner: 0.28; radiusOuter: 0.42" material="shader: flat; color: #34d399; emissive: #34d399; emissiveIntensity: 0.9; transparent: true; opacity: 0.85; side: double; blending: additive; depthTest: false"></a-entity>
               {Array.from({ length: 5 }, (_, j) => (
-                <a-entity key={`pa${j}`} geometry={`primitive: ring; radiusInner: ${0.3 + j*0.06}; radiusOuter: ${0.34 + j*0.06}; thetaStart: ${j%2===0?40:220}; thetaLength: 90`} material="color: #34d399; emissive: #34d399; emissiveIntensity: 0.5; transparent: true; opacity: 0.9" animation={`property: rotation; to: 0 0 ${j%2===0?360:-360}; loop: true; dur: ${3000 + j*500}`}></a-entity>
+                <a-entity key={`pa${j}`} geometry={`primitive: ring; radiusInner: ${0.3 + j*0.06}; radiusOuter: ${0.34 + j*0.06}; thetaStart: ${j%2===0?40:220}; thetaLength: 90`} material="shader: flat; color: #34d399; emissive: #34d399; emissiveIntensity: 0.8; transparent: true; opacity: 0.95; side: double; blending: additive; depthTest: false" animation={`property: rotation; to: 0 0 ${j%2===0?360:-360}; loop: true; dur: ${3000 + j*500}`}></a-entity>
               ))}
-              <a-entity geometry="primitive: circle; radius: 0.6" material="color: #34d399; opacity: 0.1; transparent: true" animation="property: scale; from: 1 1 1; to: 1.12 1.12 1.12; dir: alternate; loop: true; dur: 1000"></a-entity>
+              <a-entity geometry="primitive: circle; radius: 0.6" material="color: #34d399; opacity: 0.18; transparent: true; side: double; depthTest: false" animation="property: scale; from: 1 1 1; to: 1.12 1.12 1.12; dir: alternate; loop: true; dur: 1000"></a-entity>
               {Array.from({ length: 14 }, (_, i) => (
                 <a-sphere key={`pp${i}`} radius="0.02" color="#34d399" material="emissive: #34d399; emissiveIntensity: 0.9" position="0 0 0" animation__p={`property: position; to: ${Math.cos((i/14)*Math.PI*2)*0.85} ${Math.sin((i/14)*Math.PI*2)*0.85} ${0.1}; dur: ${800 + i*35}; dir: alternate; loop: true; delay: ${i*50}`}></a-sphere>
               ))}
