@@ -226,6 +226,9 @@ export default function Scene3D() {
           <a-entity cursor="rayOrigin: mouse" raycaster="objects: .clickable"></a-entity>
           {/* Overlay de fundido */}
           <a-plane id="fade" position="0 0 -0.3" width="2" height="2" material="color: black; transparent: true; opacity: 0"></a-plane>
+          {/* HUD Debug global */}
+          <a-text value={`Sala: ${experience.toUpperCase()}`} position="0 0.45 -0.8" align="center" width="2.2" color="#FFFFFF"></a-text>
+          <a-text value="[1] Nebula   [2] Tunnel   [3] Plaza" position="0 0.28 -0.8" align="center" width="2.2" color="#94a3b8"></a-text>
           {/* HUD simple para minijuegos */}
           {experience === 'plaza' && (
             <a-text value={`Orbes: ${plazaScore}/${plazaTotal}`} position="0 -0.35 -0.8" align="center" width="2" color="#FFFFFF"></a-text>
@@ -282,6 +285,7 @@ export default function Scene3D() {
               ))}
             </a-entity>
             <a-light type="point" color="#60a5fa" intensity="0.6" distance="3"></a-light>
+            <a-text value="Nebula" position="0 -0.7 0" align="center" width="2" color="#60a5fa" face-camera></a-text>
           </a-entity>
           {/* Portal Tunnel */}
           <a-entity position="0 0 0">
@@ -298,6 +302,7 @@ export default function Scene3D() {
               ))}
             </a-entity>
             <a-light type="point" color="#a78bfa" intensity="0.6" distance="3"></a-light>
+            <a-text value="Tunnel" position="0 -0.7 0" align="center" width="2" color="#a78bfa" face-camera></a-text>
           </a-entity>
           {/* Portal Plaza */}
           <a-entity position="1.4 0 0">
@@ -314,6 +319,7 @@ export default function Scene3D() {
               ))}
             </a-entity>
             <a-light type="point" color="#34d399" intensity="0.6" distance="3"></a-light>
+            <a-text value="Plaza" position="0 -0.7 0" align="center" width="2" color="#34d399" face-camera></a-text>
           </a-entity>
         </a-entity>
       )}
