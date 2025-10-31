@@ -400,36 +400,51 @@ export default function Scene3D() {
       {/* Suelos/escenas por experiencia */}
       {experience === 'nebula' && (
         <a-entity>
-          {/* Toggle de compresión/expansión */}
-          <a-entity id="nebula-toggle" class="clickable" geometry="primitive: circle; radius: 0.3" material="color: #0ea5e9; opacity: 0; transparent: true" position="-6 1.6 -12"></a-entity>
-          {Array.from({ length: 60 }, (_, i) => {
-            const angle = (i / 60) * Math.PI * 2;
-            const baseR = nebulaCompressed ? 0.8 : 3.2;
-            const x = -6 + Math.cos(angle) * (baseR * (0.5 + Math.random()*0.5));
-            const y = 1 + Math.random()*2.5;
-            const z = -12 + Math.sin(angle) * (baseR * (0.5 + Math.random()*0.5));
-            const r = 0.06 + Math.random()*0.25;
-            return (
-              <a-sphere key={`nb${i}`} position={`${x} ${y} ${z}`} radius={`${r}`} color="#7dd3fc" material="emissive: #7dd3fc; emissiveIntensity: 0.6; metalness: 0.1; roughness: 0.6" opacity="0.85"></a-sphere>
-            );
-          })}
-          <a-light type="point" position="-6 2 -12" color="#93c5fd" intensity="0.9"></a-light>
+          {/* Toggle de compresión/expansión (clic en el centro) */}
+          <a-entity id="nebula-toggle" class="clickable" geometry="primitive: circle; radius: 0.7" material="color: #0ea5e9; opacity: 0; transparent: true" position="-6 1.6 -12"></a-entity>
+          {/* Núcleo brillante y espiral de partículas */}
+          <a-entity position="-6 1.6 -12">
+            <a-sphere radius="0.35" color="#38bdf8" material="emissive: #38bdf8; emissiveIntensity: 0.8; metalness: 0.2; roughness: 0.4"></a-sphere>
+            <a-entity animation="property: rotation; to: 0 360 0; loop: true; dur: 12000">
+              {Array.from({ length: 80 }, (_, i) => {
+                const ring = Math.floor(i/20);
+                const angle = (i % 20)/20 * Math.PI * 2;
+                const radius = (nebulaCompressed ? 0.8 : 2.8) + ring*0.4;
+                const x = Math.cos(angle) * radius;
+                const y = (ring - 1.5) * 0.4;
+                const z = Math.sin(angle) * radius;
+                const r = 0.08 + Math.random()*0.18;
+                return (
+                  <a-sphere key={`nb${i}`} position={`${x} ${y} ${z}`} radius={`${r}`} color="#7dd3fc" material="emissive: #7dd3fc; emissiveIntensity: 0.8" opacity="0.95"></a-sphere>
+                );
+              })}
+            </a-entity>
+          </a-entity>
+          {/* Luz ambiente local */}
+          <a-light type="point" position="-6 2 -12" color="#93c5fd" intensity="1.1"></a-light>
         </a-entity>
       )}
 
       {experience === 'tunnel' && (
         <a-entity>
-          {Array.from({ length: 12 }, (_, i) => (
-            <a-torus key={i} position={`0 1.6 ${-10 - i*1.2}`} radius="1.5" radius-tubular="0.08" color="#a78bfa" opacity={`${0.25 + (i/20)}`} animation="property: rotation; to: 0 360 0; loop: true; dur: ${3000 + i*200}"></a-torus>
+          {Array.from({ length: 24 }, (_, i) => (
+            <a-torus key={i} position={`0 1.6 ${-8 - i*1.1}`} radius="1.8" radius-tubular="0.08" color="#a78bfa" opacity={`${0.35}`} animation={`property: rotation; to: 0 360 0; loop: true; dur: ${2600 + i*120}`}></a-torus>
+          ))}
+          {/* Líneas de velocidad */}
+          {Array.from({ length: 30 }, (_, i) => (
+            <a-entity key={`sl${i}`} position={`${(Math.random()-0.5)*0.6} ${1.6 + (Math.random()-0.5)*0.6} ${-8 - Math.random()*20}`}>
+              <a-cylinder radius="0.01" height="0.4" color="#ffffff" rotation="90 0 0" opacity="0.7" animation="property: position; to: 0 0 -22; dur: 1200; loop: true"></a-cylinder>
+            </a-entity>
           ))}
         </a-entity>
       )}
 
       {experience === 'plaza' && (
         <a-entity>
-          <a-plane position="6 -1 -12" width="8" height="8" color="#0b1220" rotation="-90 0 0" opacity="0.6"></a-plane>
+          <a-text value="Recolecta los 12 orbes" position="6 2.6 -12" align="center" width="6" color="#FFFFFF"></a-text>
+          <a-plane position="6 -1 -12" width="8" height="8" color="#0b1220" rotation="-90 0 0" opacity="0.7"></a-plane>
           {Array.from({ length: 12 }, (_, i) => (
-            <a-sphere key={`pz${i}`} class="plaza-ball plaza-orb clickable" position={`${6 + (i%3 -1)*1.6} ${0.6 + Math.random()*1.2} ${-12 + (Math.floor(i/3)-1)*1.6}`} radius="0.32" color="#34d399" animation__b={`property: position; dir: alternate; loop: true; dur: ${1100 + i*120}; to: ${6 + (i%3 -1)*1.6} ${1.5 + Math.random()*0.5} ${-12 + (Math.floor(i/3)-1)*1.6}`}></a-sphere>
+            <a-sphere key={`pz${i}`} class="plaza-orb clickable" position={`${6 + (i%3 -1)*1.6} ${0.6 + Math.random()*1.2} ${-12 + (Math.floor(i/3)-1)*1.6}`} radius="0.32" color="#34d399" animation__b={`property: position; dir: alternate; loop: true; dur: ${1100 + i*120}; to: ${6 + (i%3 -1)*1.6} ${1.5 + Math.random()*0.5} ${-12 + (Math.floor(i/3)-1)*1.6}`}></a-sphere>
           ))}
         </a-entity>
       )}
