@@ -153,7 +153,7 @@ export default function Scene3D() {
     const onBall = (el: HTMLElement) => () => {
       try {
         el.setAttribute('animation__jump', 'property: position; dir: alternate; loop: 2; dur: 400; to: ' + el.getAttribute('position')?.replace(/ ([^ ]+) /, (m)=>m) + '');
-        el.setAttribute('material', 'color', '#ffffff');
+        el.setAttribute('material', 'color: #ffffff');
       } catch {}
     };
     plazaBalls.forEach((el) => el.addEventListener('click', onBall(el)));
