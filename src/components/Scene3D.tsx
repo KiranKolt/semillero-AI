@@ -118,6 +118,28 @@ export default function Scene3D() {
     window.addEventListener('keydown', onNum);
     return () => window.removeEventListener('keydown', onNum);
   }, [experience]);
+
+  // Listeners de click para portales (React no propaga onClick en custom elements)
+  useEffect(() => {
+    const nebula = document.getElementById('portal-nebula');
+    const tunnel = document.getElementById('portal-tunnel');
+    const plaza = document.getElementById('portal-plaza');
+    const home = document.getElementById('portal-home');
+    const goNebula = () => teleportTo('-6 0 -12', 'nebula');
+    const goTunnel = () => teleportTo('0 0 -14', 'tunnel');
+    const goPlaza = () => teleportTo('6 0 -12', 'plaza');
+    const goHome = () => teleportTo('0 0 0', 'intro');
+    nebula?.addEventListener('click', goNebula);
+    tunnel?.addEventListener('click', goTunnel);
+    plaza?.addEventListener('click', goPlaza);
+    home?.addEventListener('click', goHome);
+    return () => {
+      nebula?.removeEventListener('click', goNebula);
+      tunnel?.removeEventListener('click', goTunnel);
+      plaza?.removeEventListener('click', goPlaza);
+      home?.removeEventListener('click', goHome);
+    };
+  }, [experience]);
   // Sin tarjetas ni textos en VR
 
   return (
@@ -167,11 +189,12 @@ export default function Scene3D() {
           <a-plane id="fade" position="0 0 -0.3" width="2" height="2" material="color: black; transparent: true; opacity: 0"></a-plane>
           {/* Portal pequeño para volver al hub cuando no estamos en intro */}
           {experience !== 'intro' && (
-            <a-entity position="0 -0.2 -1.2" class="clickable" onClick={() => teleportTo('0 0 0', 'intro')}>
+            <a-entity position="0 -0.2 -1.2">
               <a-entity face-camera>
                 <a-entity geometry="primitive: circle; radius: 0.18" material="color: #22d3ee; opacity: 0.25; transparent: true; side: double; depthTest: false"></a-entity>
                 <a-entity geometry="primitive: ring; radiusInner: 0.18; radiusOuter: 0.26" material="shader: flat; color: #22d3ee; emissive: #22d3ee; emissiveIntensity: 0.9; transparent: true; opacity: 0.85; side: double; blending: additive; depthTest: false"></a-entity>
               </a-entity>
+              <a-entity id="portal-home" class="clickable" geometry="primitive: circle; radius: 0.26" material="color: #fff; opacity: 0; transparent: true"></a-entity>
             </a-entity>
           )}
         </a-entity>
@@ -206,8 +229,8 @@ export default function Scene3D() {
       {experience === 'intro' && (
         <a-entity position="0 1.3 -2.2">
           {/* Portal Nebula */}
-          <a-entity position="-1.4 0 0" class="clickable" onClick={() => teleportTo('-6 0 -12', 'nebula')}>
-            <a-entity geometry="primitive: circle; radius: 0.62" material="color: #fff; opacity: 0; transparent: true"></a-entity>
+          <a-entity position="-1.4 0 0">
+            <a-entity id="portal-nebula" class="clickable" geometry="primitive: circle; radius: 0.62" material="color: #fff; opacity: 0; transparent: true"></a-entity>
             <a-entity face-camera>
               {/* núcleo */}
               <a-entity geometry="primitive: circle; radius: 0.28" material="color: #0ea5e9; opacity: 0.2; transparent: true; side: double; depthTest: false"></a-entity>
@@ -227,8 +250,8 @@ export default function Scene3D() {
             <a-light type="point" color="#60a5fa" intensity="0.6" distance="3"></a-light>
           </a-entity>
           {/* Portal Tunnel */}
-          <a-entity position="0 0 0" class="clickable" onClick={() => teleportTo('0 0 -14', 'tunnel')}>
-            <a-entity geometry="primitive: circle; radius: 0.62" material="color: #fff; opacity: 0; transparent: true"></a-entity>
+          <a-entity position="0 0 0">
+            <a-entity id="portal-tunnel" class="clickable" geometry="primitive: circle; radius: 0.62" material="color: #fff; opacity: 0; transparent: true"></a-entity>
             <a-entity face-camera>
               <a-entity geometry="primitive: circle; radius: 0.28" material="color: #8b5cf6; opacity: 0.12; transparent: true"></a-entity>
               <a-entity geometry="primitive: ring; radiusInner: 0.28; radiusOuter: 0.42" material="shader: flat; color: #a78bfa; emissive: #a78bfa; emissiveIntensity: 0.9; transparent: true; opacity: 0.85; side: double; blending: additive; depthTest: false"></a-entity>
@@ -243,8 +266,8 @@ export default function Scene3D() {
             <a-light type="point" color="#a78bfa" intensity="0.6" distance="3"></a-light>
           </a-entity>
           {/* Portal Plaza */}
-          <a-entity position="1.4 0 0" class="clickable" onClick={() => teleportTo('6 0 -12', 'plaza')}>
-            <a-entity geometry="primitive: circle; radius: 0.62" material="color: #fff; opacity: 0; transparent: true"></a-entity>
+          <a-entity position="1.4 0 0">
+            <a-entity id="portal-plaza" class="clickable" geometry="primitive: circle; radius: 0.62" material="color: #fff; opacity: 0; transparent: true"></a-entity>
             <a-entity face-camera>
               <a-entity geometry="primitive: circle; radius: 0.28" material="color: #10b981; opacity: 0.12; transparent: true"></a-entity>
               <a-entity geometry="primitive: ring; radiusInner: 0.28; radiusOuter: 0.42" material="shader: flat; color: #34d399; emissive: #34d399; emissiveIntensity: 0.9; transparent: true; opacity: 0.85; side: double; blending: additive; depthTest: false"></a-entity>
