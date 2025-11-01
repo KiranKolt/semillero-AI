@@ -23,7 +23,9 @@ export default function AllProjects() {
   }, [query, tag])
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-black text-white">
+    <div className="min-h-screen text-white nebula-container">
+      <div className="bg-nebula"></div>
+      <div className="bg-stars"></div>
       <div className="max-w-7xl mx-auto px-4 py-6 flex items-center justify-between">
         <a href="#/" className="text-blue-400 hover:text-white">← Volver al inicio</a>
         <h1 className="text-2xl font-bold">Todos los Proyectos</h1>

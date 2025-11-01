@@ -20,3 +20,39 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Animated background - Nebula + subtle stars (no VR required) */
+.nebula-container { position: relative; overflow: hidden; }
+.nebula-container .bg-nebula, .nebula-container .bg-stars { position: fixed; inset: 0; z-index: -1; }
+
+.bg-nebula {
+  background:
+    radial-gradient(60rem 40rem at 10% 20%, rgba(59,130,246,0.18), transparent 60%),
+    radial-gradient(50rem 35rem at 80% 15%, rgba(168,85,247,0.16), transparent 60%),
+    radial-gradient(55rem 40rem at 50% 85%, rgba(16,185,129,0.14), transparent 60%),
+    linear-gradient(180deg, #0f172a 0%, #0b1220 100%);
+  animation: nebula-drift 45s ease-in-out infinite alternate;
+  filter: saturate(120%);
+}
+
+.bg-stars {
+  opacity: 0.35;
+  background-image:
+    radial-gradient(1px 1px at 15px 25px, rgba(255,255,255,0.9), transparent),
+    radial-gradient(1px 1px at 120px 80px, rgba(255,255,255,0.7), transparent),
+    radial-gradient(1px 1px at 200px 150px, rgba(255,255,255,0.8), transparent),
+    radial-gradient(1px 1px at 300px 40px, rgba(255,255,255,0.6), transparent),
+    radial-gradient(1px 1px at 500px 220px, rgba(255,255,255,0.8), transparent);
+  background-size: 250px 250px, 320px 320px, 400px 400px, 520px 520px, 700px 700px;
+  animation: stars-drift 60s linear infinite;
+}
+
+@keyframes nebula-drift {
+  0% { background-position: 0 0, 0 0, 0 0, 0 0; }
+  100% { background-position: 20px -40px, -30px 25px, 25px 35px, 0 0; }
+}
+
+@keyframes stars-drift {
+  0% { background-position: 0 0, 0 0, 0 0, 0 0, 0 0; }
+  100% { background-position: -200px -120px, 160px -140px, -180px 120px, 140px 200px, -220px 160px; }
+}
+
