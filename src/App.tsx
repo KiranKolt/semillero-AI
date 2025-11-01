@@ -1,14 +1,8 @@
 import './App.css'
 import Header from './components/Header'
-import Hero from './components/Hero'
 import Scene3D from './components/Scene3D'
-import FeaturedProjects from './components/FeaturedProjects'
-import ExperienceInfo from './components/ExperienceInfo'
-import News from './components/News'
-import IntroHighlights from './components/IntroHighlights'
-import HowItWorks from './components/HowItWorks'
-import About from './components/About'
-import Footer from './components/Footer'
+import SceneOverlay from './components/SceneOverlay'
+import SceneOverlay from './components/SceneOverlay'
 import VRButton from './components/VRButton'
 
 function App() {
@@ -19,28 +13,13 @@ function App() {
         <Scene3D />
       </div>
 
-      {/* Contenido sobre el fondo 3D */}
+      {/* Contenido sobre el fondo 3D: solo navegación */}
       <div className="relative z-10 min-h-screen">
-        {/* Navegación Superior */}
         <Header />
-        
-        {/* Sección Hero con Información */}
-        <Hero />
-        <IntroHighlights />
-        <HowItWorks />
-        <ExperienceInfo />
-        
-        {/* Destacados */}
-        <FeaturedProjects />
-        <News />
-        {/* Sobre Nosotros */}
-        <About />
-        
-        {/* Footer */}
-        <Footer />
       </div>
       
-      {/* Botón flotante para entrar en VR */}
+      {/* Overlay de ayuda + botón VR */}
+      <SceneOverlay />
       <VRButton />
     </div>
   )
