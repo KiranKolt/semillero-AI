@@ -6,6 +6,7 @@ import FeaturedProjects from './components/FeaturedProjects'
 import ExperienceInfo from './components/ExperienceInfo'
 import News from './components/News'
 import IntroHighlights from './components/IntroHighlights'
+import HowItWorks from './components/HowItWorks'
 import About from './components/About'
 import Footer from './components/Footer'
 import VRButton from './components/VRButton'
@@ -26,6 +27,7 @@ function App() {
         {/* Sección Hero con Información */}
         <Hero />
         <IntroHighlights />
+        <HowItWorks />
         <ExperienceInfo />
         
         {/* Destacados */}
