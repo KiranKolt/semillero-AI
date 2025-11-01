@@ -56,7 +56,7 @@ export default function Hero() {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
-              href="#proyectos"
+              href="#/proyectos"
               className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-lg shadow-blue-500/20 transition-transform hover:scale-[1.02]"
             >
               Ver proyectos
