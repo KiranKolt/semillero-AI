@@ -1,4 +1,5 @@
 import 'aframe';
+import 'aframe-extras';
 import { useEffect, useRef, useState } from 'react';
 // Escena sin tarjetas de texto: solo elementos 3D interactivos
 
@@ -214,8 +215,8 @@ export default function Scene3D() {
         )
       })}
 
-      {/* Cámara con rig para permitir teleport suave */}
-      <a-entity id="rig" position="0 0 0">
+      {/* Cámara con rig y movement-controls (gamepad + teclado + touch) */}
+      <a-entity id="rig" position="0 0 0" movement-controls="controls: gamepad, keyboard, touch; speed: 0.2">
         <a-entity 
           camera 
           look-controls
