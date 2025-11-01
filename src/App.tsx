@@ -3,6 +3,7 @@ import Header from './components/Header'
 import Hero from './components/Hero'
 import Scene3D from './components/Scene3D'
 import Projects from './components/Projects'
+import About from './components/About'
 import Footer from './components/Footer'
 import VRButton from './components/VRButton'
 
@@ -24,6 +25,8 @@ function App() {
         
         {/* Sección de Proyectos */}
         <Projects />
+        {/* Sobre Nosotros */}
+        <About />
         
         {/* Footer */}
         <Footer />

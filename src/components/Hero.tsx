@@ -67,6 +67,36 @@ export default function Hero() {
             >
               Explorar en 3D
             </a>
+            <button
+              onClick={() => {
+                const scene = document.querySelector('a-scene') as any
+                if (scene && typeof scene.enterVR === 'function') {
+                  scene.enterVR()
+                } else {
+                  document.getElementById('scene3d')?.scrollIntoView({ behavior: 'smooth' })
+                }
+              }}
+              className="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold shadow-lg shadow-emerald-500/20 transition-transform hover:scale-[1.02]"
+            >
+              Entrar en VR
+            </button>
+            <button
+              onClick={() => {
+                const order = ['inicio','proyectos','scene3d','sobre-nosotros']
+                let idx = 0
+                const step = () => {
+                  const id = order[idx]
+                  const el = document.getElementById(id)
+                  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                  idx++
+                  if (idx < order.length) setTimeout(step, 1100)
+                }
+                step()
+              }}
+              className="px-6 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold border border-white/15 backdrop-blur-md transition-transform hover:scale-[1.02]"
+            >
+              Iniciar tour
+            </button>
           </div>
         </div>
       </div>

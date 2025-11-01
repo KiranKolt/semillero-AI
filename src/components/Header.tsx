@@ -1,4 +1,23 @@
+import { useEffect, useState } from 'react'
+
 export default function Header() {
+  const [active, setActive] = useState<string>('inicio')
+
+  useEffect(() => {
+    const sections = ['inicio','scene3d','proyectos','sobre-nosotros']
+    const obs = new IntersectionObserver((entries) => {
+      const visible = entries
+        .filter(e => e.isIntersecting)
+        .sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0]
+      if (visible?.target?.id) setActive(visible.target.id)
+    }, { root: null, threshold: [0.2, 0.5, 0.8] })
+    sections.forEach(id => {
+      const el = document.getElementById(id)
+      if (el) obs.observe(el)
+    })
+    return () => obs.disconnect()
+  }, [])
+
   return (
     <header className="bg-black/70 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -10,16 +29,16 @@ export default function Header() {
           
           {/* Navegación */}
           <div className="hidden md:flex space-x-8">
-            <a href="#inicio" className="text-gray-300 hover:text-white transition-colors">
+            <a href="#inicio" className={`transition-colors ${active==='inicio' ? 'text-white' : 'text-gray-300 hover:text-white'}`}>
               Inicio
             </a>
-            <a href="#scene3d" className="text-gray-300 hover:text-white transition-colors">
+            <a href="#scene3d" className={`transition-colors ${active==='scene3d' ? 'text-white' : 'text-gray-300 hover:text-white'}`}>
               Experiencia 3D
             </a>
-            <a href="#proyectos" className="text-gray-300 hover:text-white transition-colors">
+            <a href="#proyectos" className={`transition-colors ${active==='proyectos' ? 'text-white' : 'text-gray-300 hover:text-white'}`}>
               Proyectos
             </a>
-            <a href="#sobre-nosotros" className="text-gray-300 hover:text-white transition-colors">
+            <a href="#sobre-nosotros" className={`transition-colors ${active==='sobre-nosotros' ? 'text-white' : 'text-gray-300 hover:text-white'}`}>
               Sobre Nosotros
             </a>
           </div>
