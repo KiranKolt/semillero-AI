@@ -1,6 +1,9 @@
-import { mockProjects } from '../types/project'
+import { useState } from 'react'
+import { mockProjects, Project } from '../types/project'
+import ProjectModal from './ProjectModal'
 
 export default function Projects() {
+  const [selected, setSelected] = useState<Project | null>(null)
   return (
     <section id="proyectos" className="py-20 px-4">
       <div className="max-w-7xl mx-auto">
@@ -44,12 +47,13 @@ export default function Projects() {
                 </div>
               )}
               
-              <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition-colors">
+              <button onClick={() => setSelected(project)} className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition-colors">
                 Ver Detalles
               </button>
             </div>
           ))}
         </div>
+        <ProjectModal project={selected} onClose={() => setSelected(null)} />
       </div>
     </section>
   )
