@@ -2,7 +2,9 @@ import './App.css'
 import Header from './components/Header'
 import Hero from './components/Hero'
 import Scene3D from './components/Scene3D'
-import Projects from './components/Projects'
+import FeaturedProjects from './components/FeaturedProjects'
+import ExperienceInfo from './components/ExperienceInfo'
+import News from './components/News'
 import About from './components/About'
 import Footer from './components/Footer'
 import VRButton from './components/VRButton'
@@ -22,9 +24,11 @@ function App() {
         
         {/* Sección Hero con Información */}
         <Hero />
+        <ExperienceInfo />
         
-        {/* Sección de Proyectos */}
-        <Projects />
+        {/* Destacados */}
+        <FeaturedProjects />
+        <News />
         {/* Sobre Nosotros */}
         <About />
         
