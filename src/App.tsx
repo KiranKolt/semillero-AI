@@ -2,7 +2,6 @@ import './App.css'
 import Header from './components/Header'
 import Scene3D from './components/Scene3D'
 import SceneOverlay from './components/SceneOverlay'
-import SceneOverlay from './components/SceneOverlay'
 import VRButton from './components/VRButton'
 
 function App() {
