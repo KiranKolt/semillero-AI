@@ -62,7 +62,7 @@ export default function AllProjects() {
                 <div className="text-sm text-gray-400">Por <span className="text-blue-400">{project.author}</span></div>
                 <div className="flex gap-2">
                   <button onClick={() => setSelected(project)} className="px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded-lg">Detalles</button>
-                  <a href="#/" onClick={(e) => { /* anchor to home 3D section */ }} className="px-3 py-1 bg-white/10 border border-white/10 rounded-lg">3D</a>
+                  <a href="#/" onClick={(e) => { e.preventDefault(); window.location.hash = '/'; setTimeout(() => document.getElementById('scene3d')?.scrollIntoView({ behavior: 'smooth' }), 60); }} className="px-3 py-1 bg-white/10 border border-white/10 rounded-lg">3D</a>
                 </div>
               </div>
             </div>
