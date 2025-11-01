@@ -29,16 +29,32 @@ export default function Header() {
           
           {/* Navegación */}
           <div className="hidden md:flex space-x-8">
-            <a href="#inicio" className={`transition-colors ${active==='inicio' ? 'text-white' : 'text-gray-300 hover:text-white'}`}>
+            <a href="#/inicio" className={`transition-colors ${active==='inicio' ? 'text-white' : 'text-gray-300 hover:text-white'}`}>
               Inicio
             </a>
-            <a href="#scene3d" className={`transition-colors ${active==='scene3d' ? 'text-white' : 'text-gray-300 hover:text-white'}`}>
+            <a
+              href="#/"
+              onClick={(e) => {
+                e.preventDefault();
+                window.location.hash = '/';
+                setTimeout(() => document.getElementById('scene3d')?.scrollIntoView({ behavior: 'smooth' }), 60);
+              }}
+              className={`transition-colors ${active==='scene3d' ? 'text-white' : 'text-gray-300 hover:text-white'}`}
+            >
               Experiencia 3D
             </a>
-            <a href="#proyectos" className={`transition-colors ${active==='proyectos' ? 'text-white' : 'text-gray-300 hover:text-white'}`}>
+            <a href="#/proyectos" className={`transition-colors ${active==='proyectos' ? 'text-white' : 'text-gray-300 hover:text-white'}`}>
               Proyectos
             </a>
-            <a href="#sobre-nosotros" className={`transition-colors ${active==='sobre-nosotros' ? 'text-white' : 'text-gray-300 hover:text-white'}`}>
+            <a
+              href="#/inicio"
+              onClick={(e) => {
+                e.preventDefault();
+                window.location.hash = '/inicio';
+                setTimeout(() => document.getElementById('sobre-nosotros')?.scrollIntoView({ behavior: 'smooth' }), 80);
+              }}
+              className={`transition-colors ${active==='sobre-nosotros' ? 'text-white' : 'text-gray-300 hover:text-white'}`}
+            >
               Sobre Nosotros
             </a>
           </div>
